@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>CodeQuest Lab — Mission 3 Plus</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root{color-scheme:light; --v:#7C3AED; --d:#4C1D95; --m:#2DD4BF; --c:#FF6B6B; --s:#FFD166; --ink:#241943; --bg:#F6F3FF; --soft:#EFE8FF;
+    box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);}
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Nunito',sans-serif; display:flex; justify-content:center; padding:22px 14px;}
+  h1,h2,.d{font-family:'Baloo 2',cursive;}
+  .stage{width:100%; max-width:560px;}
+  .card{background:#fff; border-radius:24px; padding:22px 20px; box-shadow:0 14px 34px -20px rgba(36,25,67,.4); display:none;}
+  .card.on{display:block;}
+  .hero{background:linear-gradient(160deg,var(--v),var(--d)); color:#fff; text-align:center; padding:30px 20px;}
+  .hero .bot{font-size:60px; display:block;}
+  .hero h1{margin:6px 0; font-size:28px;}
+  .hero p{margin:0 0 16px; font-size:16px; line-height:1.5;}
+  .lv{display:flex; gap:8px; justify-content:center; margin-bottom:18px; flex-wrap:wrap;}
+  .lv span{background:rgba(255,255,255,.18); border-radius:999px; padding:6px 12px; font-weight:800; font-size:13px;}
+  button{font-family:'Baloo 2',cursive; font-weight:800; font-size:18px; border:none; border-radius:16px; padding:12px 24px; cursor:pointer; background:var(--s); color:var(--d); box-shadow:0 6px 0 #E0A93B;}
+  button:active{transform:translateY(3px); box-shadow:0 3px 0 #E0A93B;}
+  button:disabled{opacity:.4; cursor:not-allowed;}
+  .tag{display:inline-block; background:var(--soft); color:var(--v); font-weight:800; font-size:13px; border-radius:999px; padding:5px 12px;}
+  .bar{height:12px; background:var(--soft); border-radius:999px; overflow:hidden; margin:10px 0 14px;}
+  .bar i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--m),var(--v)); transition:width .3s;}
+  .pic{font-size:34px; margin:4px 0 8px;}
+  .q{font-size:20px; font-weight:800; line-height:1.4; margin:0 0 6px; font-family:'Baloo 2',cursive;}
+  .hint{background:none; box-shadow:none; color:var(--v); font-size:15px; padding:4px 0; font-family:'Nunito',sans-serif; text-decoration:underline;}
+  .hb,.why{display:none; margin-top:10px; border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.5; background:#F1ECFF; color:var(--ink);}
+  .show{display:block;}
+  .opt{display:block; width:100%; text-align:left; background:#F0EBFF; color:#241943; border:2px solid transparent; border-radius:14px; padding:13px 15px; margin-bottom:10px; font-family:'Nunito',sans-serif; font-weight:800; font-size:17px; box-shadow:none;}
+  .opt:active{transform:none; box-shadow:none;}
+  .ok{background:#DDF9F3 !important; border-color:var(--m) !important; color:#0F766E !important;}
+  .no{background:#FFE9E9 !important; border-color:var(--c) !important; color:#B91C1C !important;}
+  .next{text-align:right; margin-top:14px;}
+  .center{text-align:center;}
+  /* creative widgets */
+  .boxv{display:flex; flex-direction:column; width:190px; margin:8px auto 4px; border:3px solid var(--v); border-radius:18px; overflow:hidden;}
+  .boxv button{border-radius:0; box-shadow:none; font-size:26px; padding:18px; background:#F0EBFF; color:var(--ink);}
+  .boxv button.lab{background:var(--v); color:#fff; font-size:20px;}
+  .dial{display:flex; align-items:center; justify-content:center; gap:16px; margin:10px 0;}
+  .dial .n{min-width:110px; text-align:center; border:3px solid var(--v); border-radius:18px; padding:8px; background:#F0EBFF;}
+  .dial .n small{display:block; font-size:13px; color:var(--v); font-weight:800; font-family:'Nunito',sans-serif;}
+  .dial .n b{font-size:38px; font-family:'Baloo 2',cursive;}
+  .round{width:56px; height:56px; padding:0; border-radius:50%; font-size:30px;}
+  .row{display:flex; align-items:center; gap:8px; margin-bottom:10px; background:#F0EBFF; border-radius:14px; padding:8px 10px; flex-wrap:wrap; border:2px solid transparent;}
+  .row span{flex:1 1 150px; font-weight:800; font-size:16px;}
+  .row button{font-size:14px; padding:7px 10px; box-shadow:none; background:#fff; color:var(--d); border:2px solid #CDBDF5;}
+  .row button.sel{background:var(--v); color:#fff; border-color:var(--v);}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0;}
+  .chip{box-shadow:none; background:#fff; color:var(--d); border:2px solid #CDBDF5; font-size:15px; padding:9px 12px; font-family:'Nunito',sans-serif; font-weight:800;}
+  .chip:disabled{opacity:.3;}
+  .seq{min-height:48px; background:#FFF8E1; border-radius:14px; padding:8px 12px; margin:8px 0; font-weight:800; font-size:16px; line-height:1.7;}
+  .sw{display:flex; gap:14px; justify-content:center; margin:10px 0;}
+  .sw button{width:84px; height:96px; border-radius:20px; background:#E3DCF5; color:#6D5FA6; font-size:30px; box-shadow:none; border:3px solid #CDBDF5;}
+  .sw button.on{background:var(--s); color:var(--d); border-color:#E0A93B;}
+  .sw small{display:block; font-size:12px; font-family:'Nunito',sans-serif;}
+  .task{background:#FFF8E1; border-radius:16px; padding:14px; margin:10px 0; text-align:left; font-size:16px; line-height:1.5;}
+
+  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20; background:#fff; color:#5B21B6;
+        font-family:"Nunito",sans-serif; font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px;
+        border-radius:999px; box-shadow:0 4px 12px rgba(36,25,67,.18); border:1px solid #E0D6FA;}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← Back to the journey</a>
+<div class="stage">
+  <div class="card hero on" id="intro">
+    <span class="bot">🤖</span>
+    <h1>Mission 2 Plus</h1>
+    <p>Tap, switch, sort and build! 15 fun challenges. They start easy and get harder.</p>
+    <div class="lv"><span>⭐ Level 1</span><span>⭐⭐ Level 2</span><span>⭐⭐⭐ Level 3</span></div>
+    <button id="go">Start ▶</button>
+  </div>
+
+  <div class="card" id="quiz">
+    <span class="tag" id="lvl"></span>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="pic" id="pic"></div>
+    <p class="q" id="qt"></p>
+    <button class="hint" id="hintBtn">💡 Need a hint?</button>
+    <div class="hb" id="hb"></div>
+    <div id="area" style="margin-top:10px"></div>
+    <div class="why" id="why"></div>
+    <div class="next"><button id="next" disabled>Next ▶</button></div>
+  </div>
+
+  <div class="card center" id="done">
+    <div style="font-size:56px" id="badge">🏆</div>
+    <h2 id="title" style="margin:0"></h2>
+    <div style="font-size:30px;letter-spacing:4px" id="stars"></div>
+    <p id="msg" style="font-size:17px;line-height:1.5"></p>
+    <div class="task"><b>🎯 Bonus mission (no score!)</b><br>Pick something at home. Write its <b>Input</b>, <b>Process</b> and <b>Output</b>. Show Nova next time!</div>
+    <button id="again">Play again ↺</button>
+  </div>
+</div>
+
+<script>
+const LV = ["Level 1 · Easy","Level 2 · Medium","Level 3 · Challenge"];
+const Q = [
+ // ---- Level 1: boxes ----
+ {l:0,t:"box",pic:"📦",q:"This is a memory box. Tap the LABEL.",lab:"SCORE",val:"10",a:"lab",h:"The label is the name of the box.",w:"Yes! The label is the name: SCORE."},
+ {l:0,t:"box",pic:"📦",q:"Now tap the VALUE.",lab:"SCORE",val:"10",a:"val",h:"The value is what is inside the box.",w:"The value is what is inside: 10."},
+ {l:0,t:"mc",pic:"🔄",q:"SCORE changes from 10 to 25. What changed?",o:["The label","The value","Both"],a:1,h:"Did the name on the box change?",w:"The label stays SCORE. Only the value changed."},
+ {l:0,t:"dial",pic:"❤️",q:"LIVES is 3. A monster hits you! Tap − to lose 1 life, then press Check.",lab:"LIVES",s:3,a:2,h:"3 take away 1.",w:"3 − 1 = 2. The label is still LIVES."},
+ {l:0,t:"mc",pic:"🎂",q:"Which is the best LABEL for a box that holds your age?",o:["AGE","13","Batool"],a:0,h:"The label says what the box is for.",w:"AGE tells us what is inside. 13 is the value."},
+ // ---- Level 2: input / process / output + binary ----
+ {l:1,t:"sort",pic:"🍞",q:"Toaster time! Sort each thing: Input, Process or Output.",items:[["bread goes in","I"],["it heats up","P"],["toast comes out","O"]],h:"Input goes in. Output comes out. Process is the work in the middle.",w:"Bread = input, heating = process, toast = output."},
+ {l:1,t:"sort",pic:"🎵",q:"Music app! Sort each thing.",items:[["you tap a song","I"],["the phone finds the song","P"],["you hear the music","O"]],h:"What do YOU do first? What do you get at the end?",w:"Tap = input, finding the song = process, music = output."},
+ {l:1,t:"order",pic:"🥤",q:"Vending machine! Tap the steps in the right order.",steps:["Put coins in","Choose a snack","Machine drops the snack","Take your snack"],show:[2,0,3,1],h:"Input first, then process, then output.",w:"Coins, choice, drop, take. Order matters, like a program!"},
+ {l:1,t:"switch",pic:"💡",q:"Computers use ON (1) and OFF (0). Flip the switches to make the number 2.",bits:2,a:2,h:"The left switch is worth 2. The right switch is worth 1.",w:"10 in binary is 2. Left switch ON, right switch OFF."},
+ {l:1,t:"mc",pic:"🤔",q:"Steps are in the wrong order and the program breaks. Whose fault is it?",o:["The computer","The instructions","Nobody"],a:1,h:"The computer does exactly what the steps say.",w:"The computer follows the steps. The instructions were wrong. That is a bug!"},
+ // ---- Level 3: mix ----
+ {l:2,t:"dial",pic:"🪙",q:"SCORE is 10. You find 2 coins. Each coin is +5. Set SCORE, then Check.",lab:"SCORE",s:10,a:20,h:"2 coins × 5 = 10 more.",w:"10 + 5 + 5 = 20. Same label, new value."},
+ {l:2,t:"mc",pic:"🐛",q:"Bug hunt! Which step is in the wrong place?\n1. Put on shoes  2. Put on socks  3. Tie the laces",o:["Step 1: Put on shoes","Step 2: Put on socks","Step 3: Tie the laces"],a:0,h:"What goes on your feet first?",w:"Socks must go on BEFORE shoes. You found the bug!"},
+ {l:2,t:"sort",pic:"🐱",q:"Scratch game! Sort each thing.",items:[["you press the space key","I"],["the game works out the jump","P"],["the cat jumps on screen","O"]],h:"Same pattern as the toaster!",w:"Key press = input, working out = process, cat jumps = output."},
+ {l:2,t:"order",pic:"☕",q:"Make a drink like a computer! Be exact. Tap the steps in order.",steps:["Boil the water","Put a tea bag in the cup","Pour the water in the cup","Wait 3 minutes","Take out the tea bag"],show:[3,0,4,2,1],h:"What must be ready before you pour?",w:"Boil, tea bag in cup, pour, wait, take out. Computers need every step in order."},
+ {l:2,t:"dial",pic:"🎮",q:"BOSS LEVEL! LIVES is 4. A monster hits you 3 times (−1 each). Then you find a heart (+2). Set LIVES, then Check.",lab:"LIVES",s:4,a:3,h:"Go one step at a time: 4, then 3, then 2, then 1, then add 2.",w:"4 − 1 − 1 − 1 + 2 = 3. You tracked the box like a real computer!"}
+];
+
+const $=id=>document.getElementById(id);
+let i=0,score=0,locked=false;
+$("go").onclick=()=>{$("intro").classList.remove("on");$("quiz").classList.add("on");show();};
+$("hintBtn").onclick=()=>{$("hb").classList.add("show");$("hintBtn").style.display="none";};
+$("next").onclick=()=>{i++;i<Q.length?show():finish();};
+$("again").onclick=()=>{i=0;score=0;$("done").classList.remove("on");$("quiz").classList.add("on");show();};
+
+function show(){
+  const it=Q[i]; locked=false;
+  $("lvl").textContent=LV[it.l]+"  ·  "+(i+1)+"/"+Q.length;
+  $("fill").style.width=(i/Q.length*100)+"%";
+  $("pic").textContent=it.pic; $("qt").textContent=it.q; $("qt").style.whiteSpace="pre-line";
+  $("hb").textContent=it.h; $("hb").classList.remove("show"); $("hintBtn").style.display="inline";
+  $("why").classList.remove("show"); $("next").disabled=true; $("area").innerHTML="";
+  R[it.t](it,$("area"));
+}
+function result(ok){
+  if(locked)return; locked=true; if(ok)score++;
+  $("why").textContent=(ok?"✅ ":"💪 Almost! ")+Q[i].w; $("why").classList.add("show"); $("next").disabled=false;
+}
+function mk(tag,cls,txt){const e=document.createElement(tag); if(cls)e.className=cls; if(txt!==undefined)e.textContent=txt; return e;}
+
+const R={
+  mc(it,a){
+    it.o.forEach((t,n)=>{const b=mk("button","opt",t);
+      b.onclick=()=>{if(locked)return; const bs=a.children;
+        b.classList.add(n===it.a?"ok":"no"); bs[it.a].classList.add("ok"); result(n===it.a);};
+      a.appendChild(b);});
+  },
+  box(it,a){
+    const v=mk("div","boxv"), l=mk("button","lab",it.lab), x=mk("button","",it.val);
+    const go=(k,el)=>{if(locked)return; const ok=k===it.a; el.classList.add(ok?"ok":"no");
+      (it.a==="lab"?l:x).classList.add("ok"); result(ok);};
+    l.onclick=()=>go("lab",l); x.onclick=()=>go("val",x); v.append(l,x); a.appendChild(v);
+  },
+  dial(it,a){
+    let n=it.s; const d=mk("div","dial"), m=mk("button","round","−"), p=mk("button","round","+"), box=mk("div","n");
+    const sm=mk("small","",it.lab), b=mk("b","",String(n)); box.append(sm,b);
+    m.onclick=()=>{if(!locked){n--;b.textContent=n;}}; p.onclick=()=>{if(!locked){n++;b.textContent=n;}};
+    d.append(m,box,p); const c=mk("button","","Check ✔"); c.style.marginTop="6px";
+    c.onclick=()=>{if(locked)return; const ok=n===it.a; box.classList.add(ok?"ok":"no"); result(ok);};
+    a.append(d,c);
+  },
+  sort(it,a){
+    const pick={}; const rows=[];
+    const chk=mk("button","","Check ✔"); chk.disabled=true; chk.style.marginTop="6px";
+    it.items.forEach((x,n)=>{
+      const r=mk("div","row"); r.appendChild(mk("span","",x[0]));
+      [["I","Input"],["P","Process"],["O","Output"]].forEach(([k,lab])=>{
+        const b=mk("button","",lab);
+        b.onclick=()=>{if(locked)return; pick[n]=k; [...r.querySelectorAll("button")].forEach(z=>z.classList.remove("sel")); b.classList.add("sel");
+          chk.disabled=Object.keys(pick).length<it.items.length;};
+        r.appendChild(b);});
+      rows.push(r); a.appendChild(r);});
+    chk.onclick=()=>{if(locked)return; let all=true;
+      it.items.forEach((x,n)=>{const ok=pick[n]===x[1]; if(!ok)all=false; rows[n].classList.add(ok?"ok":"no");});
+      result(all);};
+    a.appendChild(chk);
+  },
+  order(it,a){
+    const got=[]; const seq=mk("div","seq","Your order: "); const chips=mk("div","chips");
+    const rs=mk("button","","Start again"); rs.style.cssText="font-size:14px;padding:7px 12px;box-shadow:none;background:#fff;border:2px solid #CDBDF5";
+    const upd=()=>{seq.textContent="Your order: "+got.map((g,n)=>(n+1)+". "+it.steps[g]).join("   ");};
+    it.show.forEach(g=>{const c=mk("button","chip",it.steps[g]);
+      c.onclick=()=>{if(locked)return; got.push(g); c.disabled=true; upd();
+        if(got.length===it.steps.length){const ok=got.every((v,n)=>v===n); seq.classList.add(ok?"ok":"no"); result(ok);}};
+      chips.appendChild(c);});
+    rs.onclick=()=>{if(locked)return; got.length=0; upd(); [...chips.children].forEach(c=>c.disabled=false);};
+    a.append(chips,seq,rs);
+  },
+  switch(it,a){
+    const st=[0,0]; const w=mk("div","sw"); const out=mk("div","center","Number: 0"); out.style.cssText="font-size:22px;font-weight:800;margin:6px 0";
+    [2,1].forEach((val,n)=>{
+      const b=mk("button",""); const num=mk("span","","0"); const sm=mk("small","","worth "+val); b.append(num,sm);
+      b.onclick=()=>{if(locked)return; st[n]=st[n]?0:1; num.textContent=String(st[n]); b.classList.toggle("on",!!st[n]);
+        out.textContent="Number: "+(st[0]*2+st[1]);};
+      w.appendChild(b);});
+    const c=mk("button","","Check ✔");
+    c.onclick=()=>{if(locked)return; const ok=(st[0]*2+st[1])===it.a; out.classList.add(ok?"ok":"no"); result(ok);};
+    a.append(w,out,c);
+  }
+};
+
+function finish(){
+  $("quiz").classList.remove("on"); $("done").classList.add("on");
+  const n=score>=13?3:score>=10?2:1;
+  $("stars").textContent="⭐".repeat(n)+"☆".repeat(3-n);
+  $("badge").textContent=n===3?"🏆":n===2?"⚡":"🔧";
+  $("title").textContent=score+" / "+Q.length+(n===3?" — Lab Legend!":n===2?" — Circuit Master!":" — Code Cadet!");
+  $("msg").textContent=n===3?"Wow! Nova is jumping with joy!":n===2?"Great job! Nova is very happy.":"Good try! We will look at the tricky ones together.";
+  try{const b=+(localStorage.getItem("cql_m2plus_best")||0); if(score>b)localStorage.setItem("cql_m2plus_best",score);}catch(e){}
+}
+</script>
+</body>
+</html>

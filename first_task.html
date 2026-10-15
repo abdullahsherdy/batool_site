@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CodeQuest Lab — Mission 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --violet:#7C3AED; --violet-deep:#5B21B6;
+    --mint:#2DD4BF; --coral:#FF6B6B; --sun:#FFD166;
+    --ink:#241943; --bg:#F6F3FF; --card:#FFFFFF;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --bg:#1B1533; --card:#2A2150; --ink:#F1ECFF; }
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0; min-height:100%; background:var(--bg); color:var(--ink);
+    font-family:'Nunito',sans-serif; display:flex; justify-content:center;
+    padding:32px 16px;
+  }
+  h1,h2,h3,.display{font-family:'Baloo 2',cursive;}
+  .stage{ width:100%; max-width:620px; }
+
+  /* Hero / intro */
+  .hero{
+    background:linear-gradient(160deg,var(--violet) 0%,var(--violet-deep) 100%);
+    border-radius:28px; padding:36px 28px; color:#fff; text-align:center;
+    box-shadow:0 18px 40px -18px rgba(124,58,237,.55);
+  }
+  .bot{font-size:64px; line-height:1; display:block; margin-bottom:6px;}
+  .hero h1{font-size:28px; margin:6px 0 4px; font-weight:800;}
+  .hero p{margin:0 0 20px; opacity:.92; font-size:15px; line-height:1.5;}
+  .badgebar{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:22px;}
+  .badgebar span{
+    background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600;
+  }
+  button{
+    font-family:'Baloo 2',cursive; font-weight:700; font-size:17px;
+    border:none; border-radius:16px; padding:14px 26px; cursor:pointer;
+    background:var(--sun); color:var(--violet-deep);
+    box-shadow:0 8px 0 #E0A93B; transition:transform .08s;
+  }
+  button:active{transform:translateY(4px); box-shadow:0 4px 0 #E0A93B;}
+  button.secondary{background:#fff; color:var(--violet-deep); box-shadow:0 8px 0 #C9BEEA;}
+  button:disabled{opacity:.45; cursor:not-allowed; box-shadow:none;}
+  button:focus-visible{outline:3px solid #fff; outline-offset:2px;}
+
+  /* Quiz card */
+  .card{
+    background:var(--card); border-radius:24px; padding:26px 24px 22px;
+    box-shadow:0 14px 34px -20px rgba(36,25,67,.35); display:none;
+  }
+  .card.active{display:block;}
+  .meter-wrap{background:#EAE3FF; border-radius:999px; height:12px; overflow:hidden; margin-bottom:6px;}
+  .meter-fill{height:100%; background:linear-gradient(90deg,var(--mint),var(--violet)); width:0%; transition:width .35s;}
+  .meta-row{display:flex; justify-content:space-between; font-size:13px; font-weight:700; color:var(--violet); margin-bottom:18px;}
+  .qtext{font-size:19px; font-weight:800; line-height:1.4; margin:0 0 18px; font-family:'Baloo 2',cursive;}
+  .opt{
+    display:block; width:100%; text-align:left; background:#F0EBFF;
+    border:2px solid transparent; border-radius:14px; padding:13px 16px;
+    margin-bottom:10px; font-family:'Nunito',sans-serif; font-weight:600;
+    font-size:15px; color:#241943; cursor:pointer; box-shadow:none;
+  }
+  .opt:hover:not(:disabled){border-color:var(--violet);}
+  .opt.correct{background:#E4FBF6; border-color:var(--mint); color:#0F766E;}
+  .opt.wrong{background:#FFEDED; border-color:var(--coral); color:#B91C1C;}
+  .explain{
+    display:none; margin-top:14px; padding:14px 16px; border-radius:14px;
+    background:#F1ECFF; color:#241943; font-size:14.5px; line-height:1.5;
+  }
+  .explain.show{display:block;}
+  .nextrow{margin-top:18px; text-align:right;}
+
+  /* Result */
+  .result{display:none; text-align:center;}
+  .result.active{display:block;}
+  .rank{font-size:46px; margin:10px 0 2px;}
+  .score-num{font-size:52px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--violet);}
+  .best{font-size:13px; color:#6D5FA6; margin-top:2px;}
+
+  @media (max-width:420px){ .hero{padding:28px 18px;} .card{padding:22px 18px;} }
+
+  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20; background:#fff; color:#5B21B6;
+        font-family:"Nunito",sans-serif; font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px;
+        border-radius:999px; box-shadow:0 4px 12px rgba(36,25,67,.18); border:1px solid #E0D6FA;}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← Back to the journey</a>
+<div class="stage">
+
+  <div class="card active" id="intro">
+    <div class="hero">
+      <span class="bot">🤖</span>
+      <h1>CodeQuest Lab — Mission 1</h1>
+      <p>Nova the lab-bot needs a Junior Code Inventor to prove they've mastered the
+         basics of how computers and programs really work. Ready to run the mission?</p>
+      <div class="badgebar" id="badgeShelf"><span>No badges yet — earn your first below!</span></div>
+      <button id="startBtn">Start Mission ▶</button>
+    </div>
+  </div>
+
+  <div class="card" id="quizCard">
+    <div class="meter-wrap"><div class="meter-fill" id="meterFill"></div></div>
+    <div class="meta-row"><span id="qCounter">Question 1 / 16</span><span id="scoreLive">Score: 0</span></div>
+    <p class="qtext" id="qText"></p>
+    <div id="optsWrap"></div>
+    <div class="explain" id="explainBox"></div>
+    <div class="nextrow"><button id="nextBtn" disabled>Next ▶</button></div>
+  </div>
+
+  <div class="card result" id="resultCard">
+    <div class="rank" id="rankEmoji">🏆</div>
+    <h2 id="rankTitle">Circuit Master</h2>
+    <div class="score-num" id="finalScore">14/16</div>
+    <p id="rankMsg">Nova is impressed — your foundations are rock solid!</p>
+    <div class="best" id="bestLine"></div>
+    <div style="margin-top:22px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button id="retryBtn" class="secondary">Retry Mission ↺</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {q:"A computer follows instructions exactly as written, or figures out what you probably meant?",
+   opts:["Exactly as written","Figures out what you meant"], correct:0,
+   ex:"A computer has no common sense — it follows the instructions precisely, even if they're wrong."},
+  {q:"What do we call the full written list of exact steps a computer follows?",
+   opts:["A program","An input","A CPU"], correct:0,
+   ex:"A program is the complete set of instructions the computer runs."},
+  {q:"What is a single step inside a program called?",
+   opts:["An output","An instruction","A storage unit"], correct:1,
+   ex:"Each individual step in a program is one instruction."},
+  {q:"'Execute' or 'run' a program means...",
+   opts:["Deleting it","Writing it for the first time","Following its instructions, one at a time, in order"], correct:2,
+   ex:"Executing a program means the computer carries out each instruction in sequence."},
+  {q:"In Input → Process → Output, where do the ingredients you give the computer to start belong?",
+   opts:["Input","Process","Output"], correct:0,
+   ex:"Input is whatever you give the computer at the start."},
+  {q:"'Process' in Input → Process → Output refers to...",
+   opts:["The final result","What happens while the computer is working","The device's storage"], correct:1,
+   ex:"Process is the work happening in between input and output."},
+  {q:"If a recipe's final result is a cup of tea, that result is the...",
+   opts:["Input","Process","Output"], correct:2,
+   ex:"Output is what comes out at the end."},
+  {q:"Which part of a computer actually carries out the instructions — the 'worker'?",
+   opts:["Storage","CPU","Screen"], correct:1,
+   ex:"The CPU (processor) is what actually performs each instruction."},
+  {q:"Memory (RAM) is best compared to...",
+   opts:["A filing cabinet that keeps files forever","A desk holding what you're using right now, cleared when powered off","A door to the internet"], correct:1,
+   ex:"RAM holds what's actively being used, and clears when the device shuts down."},
+  {q:"Which one keeps your photos and apps even after you turn the device off?",
+   opts:["RAM","CPU","Storage"], correct:2,
+   ex:"Storage (like a filing cabinet) keeps data permanently, unlike RAM."},
+  {q:"A computer program runs its instructions...",
+   opts:["In any order it prefers","One at a time, strictly in the written order","All at the exact same moment"], correct:1,
+   ex:"This strict one-at-a-time, in-order behavior is called sequence."},
+  {q:"If steps are in the wrong order, whose 'fault' is the broken result?",
+   opts:["The computer's — it should've noticed","The instructions' — they were written wrong","Nobody's, it's random"], correct:1,
+   ex:"The computer just follows the sequence given — if the order is wrong, the instructions are wrong."},
+  {q:"What do we call a mistake in a program that causes a wrong or broken result?",
+   opts:["A feature","A bug","An output"], correct:1,
+   ex:"A bug is a mistake in the instructions, not a flaw in the computer itself."},
+  {q:"What is 'debugging'?",
+   opts:["Deleting the whole program and starting over","Finding and fixing a bug","Turning the computer off and on"], correct:1,
+   ex:"Debugging is the normal skill of locating and fixing a bug."},
+  {q:"Debugging usually means...",
+   opts:["You're bad at coding","A completely normal, expected part of programming","Something only beginners do"], correct:1,
+   ex:"Every programmer debugs constantly — it's a core, expected skill, not a sign of failure."},
+  {q:"'Trace' a sequence means...",
+   opts:["Erase it","Follow it step-by-step to check what actually happens","Guess the output without checking"], correct:1,
+   ex:"Tracing means walking through each step in order to see exactly what the computer would do."}
+];
+
+let idx = 0, score = 0;
+const introCard = document.getElementById('intro');
+const quizCard = document.getElementById('quizCard');
+const resultCard = document.getElementById('resultCard');
+const qText = document.getElementById('qText');
+const optsWrap = document.getElementById('optsWrap');
+const explainBox = document.getElementById('explainBox');
+const nextBtn = document.getElementById('nextBtn');
+const meterFill = document.getElementById('meterFill');
+const qCounter = document.getElementById('qCounter');
+const scoreLive = document.getElementById('scoreLive');
+
+function safeGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+function safeSet(key,val){ try{ localStorage.setItem(key,val); }catch(e){} }
+
+function showBadges(){
+  const best = safeGet('cql_best_score');
+  const shelf = document.getElementById('badgeShelf');
+  if(best !== null){
+    shelf.innerHTML = `<span>⭐ Best score: ${best}/${QUESTIONS.length}</span>`;
+  }
+}
+showBadges();
+
+let started = false;
+document.getElementById('startBtn').addEventListener('click', (e)=>{
+  if(started) return;
+  started = true;
+  e.target.disabled = true;
+  introCard.classList.remove('active');
+  quizCard.classList.add('active');
+  renderQuestion();
+});
+
+function renderQuestion(){
+  const item = QUESTIONS[idx];
+  qText.textContent = item.q;
+  qCounter.textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
+  scoreLive.textContent = `Score: ${score}`;
+  meterFill.style.width = `${(idx/QUESTIONS.length)*100}%`;
+  explainBox.classList.remove('show');
+  explainBox.textContent = '';
+  nextBtn.disabled = true;
+  optsWrap.innerHTML = '';
+  item.opts.forEach((opt,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt;
+    b.addEventListener('click', ()=>selectAnswer(i));
+    optsWrap.appendChild(b);
+  });
+}
+
+function selectAnswer(choice){
+  const item = QUESTIONS[idx];
+  const buttons = optsWrap.querySelectorAll('.opt');
+  buttons.forEach(b=>b.disabled = true);
+  if(choice === item.correct){
+    buttons[choice].classList.add('correct');
+    score++;
+  } else {
+    buttons[choice].classList.add('wrong');
+    buttons[item.correct].classList.add('correct');
+  }
+  explainBox.textContent = item.ex;
+  explainBox.classList.add('show');
+  scoreLive.textContent = `Score: ${score}`;
+  nextBtn.disabled = false;
+}
+
+nextBtn.addEventListener('click', ()=>{
+  idx++;
+  if(idx < QUESTIONS.length){
+    renderQuestion();
+  } else {
+    meterFill.style.width = '100%';
+    showResult();
+  }
+});
+
+function showResult(){
+  quizCard.classList.remove('active');
+  resultCard.classList.add('active');
+  document.getElementById('finalScore').textContent = `${score}/${QUESTIONS.length}`;
+  let emoji, title, msg;
+  const pct = score / QUESTIONS.length;
+  if(pct >= 0.9){ emoji='🏆'; title='Lab Legend'; msg='Nova is speechless — total mastery of the basics!'; }
+  else if(pct >= 0.7){ emoji='⚡'; title='Circuit Master'; msg='Nova is impressed — your foundations are rock solid!'; }
+  else if(pct >= 0.5){ emoji='🔧'; title='Code Cadet'; msg="Good progress! A quick review of a few ideas and you're set."; }
+  else { emoji='🔋'; title='Rookie Inventor'; msg="Great first try — let's revisit a few ideas together next time."; }
+  document.getElementById('rankEmoji').textContent = emoji;
+  document.getElementById('rankTitle').textContent = title;
+  document.getElementById('rankMsg').textContent = msg;
+
+  const prevBest = parseInt(safeGet('cql_best_score') || '0', 10);
+  const bestLine = document.getElementById('bestLine');
+  if(score > prevBest){
+    safeSet('cql_best_score', String(score));
+    bestLine.textContent = prevBest > 0 ? `New personal best! (was ${prevBest}/${QUESTIONS.length})` : 'First mission logged as your best score!';
+  } else {
+    bestLine.textContent = `Personal best stays at ${prevBest}/${QUESTIONS.length}.`;
+  }
+}
+
+document.getElementById('retryBtn').addEventListener('click', ()=>{
+  idx = 0; score = 0;
+  resultCard.classList.remove('active');
+  quizCard.classList.add('active');
+  renderQuestion();
+});
+</script>
+</body>
+</html>
