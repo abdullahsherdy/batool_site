@@ -6,7 +6,7 @@
 <title>رحلة باتول في البرمجة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lalezar&family=Baloo+Bhaijaan+2:wght@600;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Baloo+Bhaijaan+2:wght@600;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --navy:#4C1D95; --teal:#8B5CF6; --amber:#FFD166; --pink:#FF6FB5; --mint:#2DD4BF; --fog:#F6F3FF; --mid:#160F2E;
@@ -105,26 +105,28 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo',system-
 .sheet-card{border-top:6px solid transparent;border-image:linear-gradient(90deg,#2DD4BF,#8B5CF6,#FF6FB5) 1;}
 .sheet-card h2{font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;}
 .close-btn{background:linear-gradient(135deg,#8B5CF6,#FF6FB5);box-shadow:0 4px 0 #7c2d92;}
-/* hello intro */
+/* hello intro, macOS style: pen-written "hello" swept left to right */
 .hello{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
-  background:linear-gradient(135deg,#8B5CF6,#C026D3,#FF6FB5,#FFD166,#2DD4BF);background-size:400% 400%;animation:hue 8s ease infinite;transition:opacity .8s ease,transform .8s ease;}
-.hello.gone{opacity:0;transform:scale(1.08);pointer-events:none;}
-.hello svg{width:min(92vw,620px);height:auto;overflow:visible;}
-.hello text{font-family:'Pacifico',cursive;font-size:120px;fill:transparent;stroke:#fff;stroke-width:2.5;stroke-linejoin:round;
-  stroke-dasharray:1400;stroke-dashoffset:1400;animation:write 2.6s ease forwards,fill .8s ease forwards 2.2s;}
-.hello text.ar{font-family:'Lalezar',sans-serif;font-size:90px;animation-delay:1.2s,3s;}
-.hello .tap{color:#fff;opacity:0;font-weight:700;margin-top:1rem;animation:fadeIn .8s forwards 3.6s;}
-@keyframes write{to{stroke-dashoffset:0;}}
-@keyframes fill{to{fill:#fff;}}
-@keyframes fadeIn{to{opacity:.85;}}
+  background:linear-gradient(135deg,#8B5CF6,#C026D3,#FF6FB5,#FFD166,#2DD4BF);background-size:400% 400%;animation:hue 10s ease infinite;transition:opacity 1s ease,transform 1s ease;}
+.hello.gone{opacity:0;transform:scale(1.06);pointer-events:none;}
+.hello svg{width:min(90vw,640px);height:auto;overflow:visible;filter:drop-shadow(0 6px 20px rgba(76,29,149,.35));}
+.hello text{font-family:'Sacramento',cursive;font-size:230px;fill:#fff;}
+.hello .pen{transform-box:fill-box;transform-origin:left;transform:scaleX(0);animation:sweep 3s cubic-bezier(.55,.1,.35,1) forwards .3s;}
+.hello .name{color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;font-weight:300;
+  font-size:clamp(1.6rem,6vw,2.6rem);letter-spacing:.35em;margin:-.4rem 0 0 .35em;opacity:0;animation:fadeIn 1.2s ease forwards 3s;}
+.hello .tap{color:#fff;font-size:.85rem;opacity:0;margin-top:2.2rem;animation:fadeIn 1s ease forwards 4.2s;}
+@keyframes sweep{to{transform:scaleX(1);}}
+@keyframes fadeIn{to{opacity:.9;}}
 @keyframes hue{50%{background-position:100% 50%;}}
-@media (prefers-reduced-motion:reduce){.hello,.hello text,.hello .tap{animation:none;fill:#fff;stroke-dashoffset:0;opacity:1;}.node .dot::after{display:none;}}
+@media (prefers-reduced-motion:reduce){.hello,.hello .pen,.hello .name,.hello .tap{animation:none;opacity:1;}.hello .pen{transform:none;}.node .dot::after{display:none;}}
 </style>
 </head>
 <body>
-<div class="hello" id="hello" role="button" tabindex="0" aria-label="Hello Batool — tap to start">
-  <svg viewBox="0 0 620 300"><text x="310" y="140" text-anchor="middle">Hello Batool</text><text class="ar" x="310" y="260" text-anchor="middle">أهلاً باتول</text></svg>
-  <div class="tap">اضغطي عشان تبدأي ✨ tap to start</div>
+<div class="hello" id="hello" role="button" tabindex="0" aria-label="hello Batool — tap to start">
+  <svg viewBox="0 0 640 260"><defs><clipPath id="penClip"><rect class="pen" x="0" y="0" width="640" height="260"/></clipPath></defs>
+    <text x="320" y="190" text-anchor="middle" clip-path="url(#penClip)">hello</text></svg>
+  <div class="name">BATOOL</div>
+  <div class="tap">اضغطي عشان تبدأي ✨</div>
 </div>
 
 <div class="hero">
@@ -185,9 +187,9 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo',system-
 
 <script>
 const hello = document.getElementById('hello');
-function hideHello(){ hello.classList.add('gone'); setTimeout(()=>hello.remove(),900); try{sessionStorage.setItem('helloSeen','1');}catch(e){} }
-let seen=false; try{seen=sessionStorage.getItem('helloSeen');}catch(e){}
-if(seen) hello.remove(); else { hello.addEventListener('click',hideHello); hello.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')hideHello();}); setTimeout(()=>hello.isConnected&&hideHello(),6000); }
+function hideHello(){ if(!hello.isConnected) return; hello.classList.add('gone'); setTimeout(()=>hello.remove(),1000); }
+hello.addEventListener('click',hideHello); hello.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')hideHello();});
+setTimeout(hideHello,6500);
 const nodes = [
   {x:100,y:150,icon:'🧭',title:'التفكير كمبرمجة',en:'Thinking Like a Programmer',
    desc:'نبدأ برحلة بسيطة نتعلم فيها إزاي نفكر زي المبرمجة، ونربط اللي اتعلمتيه في سكراتش بعالم البرمجة الحقيقي.',
