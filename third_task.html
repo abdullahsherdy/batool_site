@@ -4,75 +4,76 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<title>CodeQuest Lab — Mission 3: Python</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<title>CodeQuest Lab — Mission 4: Python</title>
 <style>
-  :root{color-scheme:light; --v:#7C3AED; --d:#4C1D95; --m:#2DD4BF; --c:#FF6B6B; --s:#FFD166; --ink:#241943; --bg:#F6F3FF; --soft:#EFE8FF;
-    box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);}
+
   *{box-sizing:border-box;}
   html{scroll-padding-top:env(safe-area-inset-top,0px);}
-  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Nunito',sans-serif; display:flex; justify-content:center; padding:56px 14px 24px;}
-  h1,h2,.d{font-family:'Baloo 2',cursive;}
+  body{margin:0;    display:flex; justify-content:center; padding:56px 14px 24px;}
+  h1,h2,.d{}
   .stage{width:100%; max-width:560px;}
-  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20; background:#fff; color:#5B21B6; font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px; border-radius:999px; box-shadow:0 4px 12px rgba(36,25,67,.18); border:1px solid #E0D6FA;}
-  .card{background:#fff; border-radius:24px; padding:22px 20px; box-shadow:0 14px 34px -20px rgba(36,25,67,.4); display:none;}
+  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20;    font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px; border-radius:999px;  border:1px solid #E0D6FA;}
+  .card{ border-radius:24px; padding:22px 20px;  display:none;}
   .card.on{display:block;}
-  .hero{background:linear-gradient(160deg,var(--v),var(--d)); color:#fff; text-align:center; padding:28px 18px;}
+  .hero{  text-align:center; padding:28px 18px;}
   .hero .bot{font-size:56px; display:block;}
   .hero h1{margin:4px 0; font-size:27px;}
   .hero p{margin:0 0 14px; font-size:16px; line-height:1.5;}
-  button{font-family:'Baloo 2',cursive; font-weight:800; font-size:18px; border:none; border-radius:16px; padding:12px 24px; cursor:pointer; background:var(--s); color:var(--d); box-shadow:0 6px 0 #E0A93B;}
-  button:active{transform:translateY(3px); box-shadow:0 3px 0 #E0A93B;}
+  button{ font-weight:800; font-size:18px; border:none; border-radius:16px; padding:12px 24px; cursor:pointer;   }
+  button:active{transform:translateY(3px); }
   button:disabled{opacity:.4; cursor:not-allowed;}
-  .lvbtn{display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#fff; color:var(--ink); box-shadow:0 5px 0 #CDBDF5; border:2px solid #E0D6FA; margin-bottom:12px; padding:10px 14px; font-family:'Nunito',sans-serif;}
-  .lvbtn:active{box-shadow:0 2px 0 #CDBDF5;}
+  .lvbtn{display:flex; align-items:center; gap:12px; width:100%; text-align:left;    border:2px solid #E0D6FA; margin-bottom:12px; padding:10px 14px; }
+  .lvbtn:active{}
   .lvbtn .ic{font-size:30px; width:44px; text-align:center;}
-  .lvbtn b{display:block; font-family:'Baloo 2',cursive; font-size:18px; line-height:1.2;}
+  .lvbtn b{display:block;  font-size:18px; line-height:1.2;}
   .lvbtn small{font-size:13px; opacity:.7; font-weight:800;}
   .lvbtn .st{margin-left:auto; font-size:18px; white-space:nowrap;}
-  .tag{display:inline-block; background:var(--soft); color:var(--v); font-weight:800; font-size:13px; border-radius:999px; padding:5px 12px;}
-  .bar{height:12px; background:var(--soft); border-radius:999px; overflow:hidden; margin:10px 0 14px;}
-  .bar i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--m),var(--v)); transition:width .3s;}
+  .tag{display:inline-block;   font-weight:800; font-size:13px; border-radius:999px; padding:5px 12px;}
+  .bar{height:12px;  border-radius:999px; overflow:hidden; margin:10px 0 14px;}
+  .bar i{display:block; height:100%; width:0;  transition:width .3s;}
   .pic{font-size:34px; margin:4px 0 8px;}
-  .q{font-size:20px; font-weight:800; line-height:1.4; margin:0 0 6px; font-family:'Baloo 2',cursive;}
-  .hint{background:none; box-shadow:none; color:var(--v); font-size:15px; padding:4px 0; font-family:'Nunito',sans-serif; text-decoration:underline;}
-  .hb,.why{display:none; margin-top:10px; border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.5; background:#F1ECFF; color:var(--ink);}
+  .q{font-size:20px; font-weight:800; line-height:1.4; margin:0 0 6px; }
+  .hint{   font-size:15px; padding:4px 0;  text-decoration:underline;}
+  .hb,.why{display:none; margin-top:10px; border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.5;  }
   .show{display:block;}
-  pre.code{background:#241943; color:#FFE9A8; border-radius:14px; padding:12px 14px; margin:8px 0 12px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:16px; line-height:1.6; overflow-x:auto; white-space:pre;}
-  .opt{display:block; width:100%; text-align:left; background:#F0EBFF; color:#241943; border:2px solid transparent; border-radius:14px; padding:13px 15px; margin-bottom:10px; font-family:'Nunito',sans-serif; font-weight:800; font-size:17px; box-shadow:none;}
-  .opt:active{transform:none; box-shadow:none;}
-  .ok{background:#DDF9F3 !important; border-color:var(--m) !important; color:#0F766E !important;}
-  .no{background:#FFE9E9 !important; border-color:var(--c) !important; color:#B91C1C !important;}
+  pre.code{  border-radius:14px; padding:12px 14px; margin:8px 0 12px;  font-size:16px; line-height:1.6; overflow-x:auto; white-space:pre;}
+  .opt{display:block; width:100%; text-align:left;   border:2px solid transparent; border-radius:14px; padding:13px 15px; margin-bottom:10px;  font-weight:800; font-size:17px; }
+  .opt:active{transform:none; }
+  .ok{  }
+  .no{  }
   .next{text-align:right; margin-top:14px;}
   .center{text-align:center;}
   .taps{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0;}
   .taps.blk{flex-direction:column;}
-  .tk{box-shadow:none; background:#241943; color:#FFE9A8; border:3px solid transparent; font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; font-size:16px; padding:11px 14px; text-align:left; border-radius:12px;}
+  .tk{   border:3px solid transparent;  font-weight:700; font-size:16px; padding:11px 14px; text-align:left; border-radius:12px;}
   .tk:active{transform:none;}
-  .row{display:flex; align-items:center; gap:8px; margin-bottom:10px; background:#F0EBFF; border-radius:14px; padding:8px 10px; flex-wrap:wrap; border:2px solid transparent;}
-  .row span{flex:1 1 120px; font-weight:800; font-size:16px; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .row button{font-size:14px; padding:7px 10px; box-shadow:none; background:#fff; color:var(--d); border:2px solid #CDBDF5;}
-  .row button.sel{background:var(--v); color:#fff; border-color:var(--v);}
+  .row{display:flex; align-items:center; gap:8px; margin-bottom:10px;  border-radius:14px; padding:8px 10px; flex-wrap:wrap; border:2px solid transparent;}
+  .row span{flex:1 1 120px; font-weight:800; font-size:16px; }
+  .row button{font-size:14px; padding:7px 10px;    border:2px solid #dedfd8;}
+  .row button.sel{  }
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0;}
-  .chip{box-shadow:none; background:#fff; color:var(--d); border:2px solid #CDBDF5; font-size:15px; padding:9px 12px; font-family:'Nunito',sans-serif; font-weight:800; text-align:left;}
-  .chip.mono{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700;}
+  .chip{   border:2px solid #dedfd8; font-size:15px; padding:9px 12px;  font-weight:800; text-align:left;}
+  .chip.mono{ font-weight:700;}
   .chip:disabled{opacity:.3;}
-  .seq{min-height:48px; background:#FFF8E1; border-radius:14px; padding:8px 12px; margin:8px 0; font-weight:800; font-size:15px; line-height:1.7; white-space:pre-line;}
-  .seq.mono{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700;}
+  .seq{min-height:48px;  border-radius:14px; padding:8px 12px; margin:8px 0; font-weight:800; font-size:15px; line-height:1.7; white-space:pre-line;}
+  .seq.mono{ font-weight:700;}
   .stars{font-size:32px; letter-spacing:4px;}
-  .trophy{display:none; background:#FFF8E1; border-radius:16px; padding:12px; font-weight:800; margin-top:6px;}
+  .trophy{display:none;  border-radius:16px; padding:12px; font-weight:800; margin-top:6px;}
 </style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="playful.css">
 </head>
 <body>
-<a class="back" href="index.html">← Back to the journey</a>
-<div class="stage">
+<a class="skip" href="#main">Skip to lesson</a>
+<a class="back" href="index.html"> Back to the journey</a>
+<main class="stage" id="main">
 
   <div class="card hero on" id="map">
-    <span class="bot">🐍</span>
-    <h1>Mission 3: Python!</h1>
+
+    <h1>Mission 4: Python</h1>
     <p>Variables, data types, print and input. Finish a level to open the next one. You can stop after any level.</p>
     <div id="levels"></div>
-    <div class="trophy" id="trophy">🏆 You finished every level! Nova is so proud!</div>
+    <div class="trophy" id="trophy"> You finished every level! Well done.</div>
   </div>
 
   <div class="card" id="quiz">
@@ -80,67 +81,66 @@
     <div class="bar"><i id="fill"></i></div>
     <div class="pic" id="pic"></div>
     <p class="q" id="qt"></p>
-    <button class="hint" id="hintBtn">💡 Need a hint?</button>
+    <button class="hint" id="hintBtn"> Need a hint?</button>
     <div class="hb" id="hb"></div>
     <div id="area" style="margin-top:10px"></div>
-    <div class="why" id="why"></div>
-    <div class="next"><button id="next" disabled>Next ▶</button></div>
+    <div class="why" id="why" role="status" aria-live="polite"></div>
+    <div class="next"><button id="next" disabled>Next </button></div>
   </div>
 
   <div class="card center" id="done">
-    <div style="font-size:54px" id="badge">🏆</div>
+    <div style="font-size:54px" id="badge"></div>
     <h2 id="title" style="margin:0"></h2>
     <div class="stars" id="stars"></div>
     <p id="msg" style="font-size:17px;line-height:1.5"></p>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-      <button id="toMap" style="background:#fff;box-shadow:0 6px 0 #CDBDF5">🗺️ Map</button>
-      <button id="nextLv">Next level ▶</button>
+      <button id="toMap" style="background:#fff;box-shadow:0 6px 0 #dedfd8"> Map</button>
+      <button id="nextLv">Next level </button>
     </div>
   </div>
-</div>
-
+</main>
 <script>
 const LV = [
-  {n:"Box Island", ic:"📦", t:"Variables"},
-  {n:"Type Lab", ic:"🧪", t:"Data types"},
-  {n:"Print Parade", ic:"📢", t:"Output with print()"},
-  {n:"Input Cave", ic:"⌨️", t:"Input with input()"},
-  {n:"Boss Castle", ic:"👾", t:"Mix of everything"}
+  {n:"Box Island", ic:"", t:"Variables"},
+  {n:"Type Lab", ic:"", t:"Data types"},
+  {n:"Print Parade", ic:"", t:"Output with print()"},
+  {n:"Input Cave", ic:"", t:"Input with input()"},
+  {n:"Boss Castle", ic:"", t:"Mix of everything"}
 ];
 const Q = [
  // ===== Level 1: variables =====
- {l:0,t:"tap",pic:"📦",q:"Python code makes a box. Tap the NAME of the box (the label).",items:["score","=","10"],a:0,h:"The name is the word on the left.",w:"score is the variable name. It is the label of the box."},
- {l:0,t:"tap",pic:"📦",q:"Now tap the VALUE inside the box.",items:["score","=","10"],a:2,h:"The value is what goes into the box.",w:"10 is the value. The = sign puts it in the box."},
- {l:0,t:"mc",pic:"🧲",q:"What does the = sign do here?",code:"age = 13",o:["Puts 13 into the box called age","Asks if age is 13","Shows 13 on the screen"],a:0,h:"In Python, one = means put it in.",w:"One = means put the value in the box."},
- {l:0,t:"mc",pic:"🔄",q:"What is inside the box lives now?",code:"lives = 3\nlives = 2",o:["3","2","5"],a:1,h:"A new value replaces the old one.",w:"The box keeps only the newest value: 2."},
- {l:0,t:"mc",pic:"🏷️",q:"Which is a good name for a box that holds a player's name?",o:["player_name","2players","my name"],a:0,h:"Names cannot start with a number or have spaces.",w:"player_name works. Use an underscore instead of a space."},
- {l:0,t:"order",pic:"🧩",q:"Build a program that shows 2 on the screen. Tap the lines in the right order.",steps:["lives = 3","lives = 2","print(lives)"],show:[1,2,0],code:true,h:"The box must be filled before you show it.",w:"First 3, then 2 replaces it, then print shows 2."},
+ {l:0,t:"tap",pic:"",q:"Python code makes a box. Tap the NAME of the box (the label).",items:["score","=","10"],a:0,h:"The name is the word on the left.",w:"score is the variable name. It is the label of the box."},
+ {l:0,t:"tap",pic:"",q:"Now tap the VALUE inside the box.",items:["score","=","10"],a:2,h:"The value is what goes into the box.",w:"10 is the value. The = sign puts it in the box."},
+ {l:0,t:"mc",pic:"",q:"What does the = sign do here?",code:"age = 13",o:["Puts 13 into the box called age","Asks if age is 13","Shows 13 on the screen"],a:0,h:"In Python, one = means put it in.",w:"One = means put the value in the box."},
+ {l:0,t:"mc",pic:"",q:"What is inside the box lives now?",code:"lives = 3\nlives = 2",o:["3","2","5"],a:1,h:"A new value replaces the old one.",w:"The box keeps only the newest value: 2."},
+ {l:0,t:"mc",pic:"",q:"Which is a good name for a box that holds a player's name?",o:["player_name","2players","my name"],a:0,h:"Names cannot start with a number or have spaces.",w:"player_name works. Use an underscore instead of a space."},
+ {l:0,t:"order",pic:"",q:"Build a program that shows 2 on the screen. Tap the lines in the right order.",steps:["lives = 3","lives = 2","print(lives)"],show:[1,2,0],code:true,h:"The box must be filled before you show it.",w:"First 3, then 2 replaces it, then print shows 2."},
  // ===== Level 2: data types =====
- {l:1,t:"sort",pic:"🧪",q:"Sort each value into its data type.",b:[["int","Whole number"],["str","Text"],["bool","True / False"]],items:[["7","int"],["\"hello\"","str"],["True","bool"]],h:"Text always has quotes around it.",w:"7 is a whole number. \"hello\" is text. True is a True/False value."},
- {l:1,t:"sort",pic:"🔢",q:"Careful with quotes! Sort each value.",b:[["int","Whole number"],["str","Text"],["bool","True / False"]],items:[["25","int"],["\"25\"","str"],["False","bool"]],h:"Quotes turn anything into text, even numbers.",w:"25 is a number, but \"25\" with quotes is text."},
- {l:1,t:"mc",pic:"💰",q:"What data type is 4.5?",code:"price = 4.5",o:["int (whole number)","float (decimal number)","str (text)"],a:1,h:"It has a dot, so it is not whole.",w:"Numbers with a decimal point are called float."},
- {l:1,t:"mc",pic:"🕵️",q:"What does this show on the screen?",code:"print(type(42))",o:["<class 'int'>","<class 'str'>","42"],a:0,h:"type() tells you the data type of a value.",w:"type(42) says int, because 42 is a whole number."},
- {l:1,t:"mc",pic:"🧵",q:"What does this show? Careful, those are text!",code:"x = \"5\"\ny = \"3\"\nprint(x + y)",o:["8","53","Error"],a:1,h:"With text, + glues the pieces together.",w:"Text + text sticks together: \"5\" and \"3\" make 53."},
- {l:1,t:"tap",pic:"🐛",q:"Bug hunt! Tap the line with the mistake.",items:["name = \"Batool\"","age = 13","is_happy = true"],block:true,a:2,h:"Python needs a capital letter for True.",w:"It must be True with a capital T. Typing mistakes are normal bugs!"},
+ {l:1,t:"sort",pic:"",q:"Sort each value into its data type.",b:[["int","Whole number"],["str","Text"],["bool","True / False"]],items:[["7","int"],["\"hello\"","str"],["True","bool"]],h:"Text always has quotes around it.",w:"7 is a whole number. \"hello\" is text. True is a True/False value."},
+ {l:1,t:"sort",pic:"",q:"Careful with quotes! Sort each value.",b:[["int","Whole number"],["str","Text"],["bool","True / False"]],items:[["25","int"],["\"25\"","str"],["False","bool"]],h:"Quotes turn anything into text, even numbers.",w:"25 is a number, but \"25\" with quotes is text."},
+ {l:1,t:"mc",pic:"",q:"What data type is 4.5?",code:"price = 4.5",o:["int (whole number)","float (decimal number)","str (text)"],a:1,h:"It has a dot, so it is not whole.",w:"Numbers with a decimal point are called float."},
+ {l:1,t:"mc",pic:"",q:"What does this show on the screen?",code:"print(type(42))",o:["<class 'int'>","<class 'str'>","42"],a:0,h:"type() tells you the data type of a value.",w:"type(42) says int, because 42 is a whole number."},
+ {l:1,t:"mc",pic:"",q:"What does this show? Careful, those are text!",code:"x = \"5\"\ny = \"3\"\nprint(x + y)",o:["8","53","Error"],a:1,h:"With text, + glues the pieces together.",w:"Text + text sticks together: \"5\" and \"3\" make 53."},
+ {l:1,t:"tap",pic:"",q:"Bug hunt! Tap the line with the mistake.",items:["name = \"Batool\"","age = 13","is_happy = true"],block:true,a:2,h:"Python needs a capital letter for True.",w:"It must be True with a capital T. Typing mistakes are normal bugs!"},
  // ===== Level 3: output =====
- {l:2,t:"mc",pic:"📢",q:"What does this show on the screen?",code:"print(\"Hello\")",o:["Hello","\"Hello\"","print Hello"],a:0,h:"The quotes tell Python it is text. They do not show.",w:"print shows the text without the quotes: Hello."},
- {l:2,t:"mc",pic:"➕",q:"What does this show?",code:"print(2 + 3)",o:["2 + 3","5","23"],a:1,h:"Without quotes, Python does the math.",w:"Python works it out and shows 5."},
- {l:2,t:"mc",pic:"💬",q:"Now with quotes. What does this show?",code:"print(\"2 + 3\")",o:["5","2 + 3","Error"],a:1,h:"Quotes mean text. Text is shown exactly as it is.",w:"Inside quotes it is just text, so Python shows 2 + 3."},
- {l:2,t:"order",pic:"🧩",q:"Build a program that shows 10. Tap the lines in order.",steps:["score = 5","score = score * 2","print(score)"],show:[1,2,0],code:true,h:"Start with the box, change it, then show it. (* means times)",w:"5 times 2 is 10, and print shows it."},
- {l:2,t:"tap",pic:"🐛",q:"Bug hunt! One print line is broken. Tap it.",items:["print(\"Hello\")","print(\"Batool)","print(13)"],block:true,a:1,h:"Look at the quotes.",w:"The second line forgot the closing quote."},
+ {l:2,t:"mc",pic:"",q:"What does this show on the screen?",code:"print(\"Hello\")",o:["Hello","\"Hello\"","print Hello"],a:0,h:"The quotes tell Python it is text. They do not show.",w:"print shows the text without the quotes: Hello."},
+ {l:2,t:"mc",pic:"",q:"What does this show?",code:"print(2 + 3)",o:["2 + 3","5","23"],a:1,h:"Without quotes, Python does the math.",w:"Python works it out and shows 5."},
+ {l:2,t:"mc",pic:"",q:"Now with quotes. What does this show?",code:"print(\"2 + 3\")",o:["5","2 + 3","Error"],a:1,h:"Quotes mean text. Text is shown exactly as it is.",w:"Inside quotes it is just text, so Python shows 2 + 3."},
+ {l:2,t:"order",pic:"",q:"Build a program that shows 10. Tap the lines in order.",steps:["score = 5","score = score * 2","print(score)"],show:[1,2,0],code:true,h:"Start with the box, change it, then show it. (* means times)",w:"5 times 2 is 10, and print shows it."},
+ {l:2,t:"tap",pic:"",q:"Bug hunt! One print line is broken. Tap it.",items:["print(\"Hello\")","print(\"Batool)","print(13)"],block:true,a:1,h:"Look at the quotes.",w:"The second line forgot the closing quote."},
  // ===== Level 4: input =====
- {l:3,t:"mc",pic:"⌨️",q:"What does input() do?",o:["It waits for you to type something","It shows text on the screen","It deletes the box"],a:0,h:"The program stops and listens to you.",w:"input() waits for the user to type, then gives it back."},
- {l:3,t:"mc",pic:"🙋",q:"Batool types Sara. What is inside the box name?",code:"name = input(\"Your name? \")",o:["Sara","name","Your name? "],a:0,h:"The box keeps what the user typed.",w:"The box name now holds what was typed: Sara."},
- {l:3,t:"mc",pic:"🔤",q:"The user types 13. What data type is age?",code:"age = input(\"Age? \")",o:["int (number)","str (text)","bool"],a:1,h:"Secret: input() always gives text.",w:"input() always gives text, even when you type a number."},
- {l:3,t:"mc",pic:"🔧",q:"Fill the blank to turn the text into a whole number.",code:"age = ___(input(\"Age? \"))",o:["int","print","str"],a:0,h:"Which word means whole number?",w:"int() changes text into a whole number."},
- {l:3,t:"order",pic:"🧩",q:"Build a program that asks a name and says hello. Tap the lines in order.",steps:["print(\"What is your name?\")","name = input()","print(\"Hello\", name)"],show:[2,0,1],code:true,h:"Ask first, listen, then answer.",w:"Ask, then input() listens, then print says hello."},
- {l:3,t:"tap",pic:"🐛",q:"Bug hunt! One line will crash. Tap it.",items:["name = input(\"Name? \")","age = input(\"Age? \")","print(age + 1)"],block:true,a:2,h:"age is text. Can you add 1 to text?",w:"age is text, so age + 1 crashes. Use int(input(...)) to fix it."},
+ {l:3,t:"mc",pic:"",q:"What does input() do?",o:["It waits for you to type something","It shows text on the screen","It deletes the box"],a:0,h:"The program stops and listens to you.",w:"input() waits for the user to type, then gives it back."},
+ {l:3,t:"mc",pic:"",q:"Batool types Sara. What is inside the box name?",code:"name = input(\"Your name? \")",o:["Sara","name","Your name? "],a:0,h:"The box keeps what the user typed.",w:"The box name now holds what was typed: Sara."},
+ {l:3,t:"mc",pic:"",q:"The user types 13. What data type is age?",code:"age = input(\"Age? \")",o:["int (number)","str (text)","bool"],a:1,h:"Secret: input() always gives text.",w:"input() always gives text, even when you type a number."},
+ {l:3,t:"mc",pic:"",q:"Fill the blank to turn the text into a whole number.",code:"age = ___(input(\"Age? \"))",o:["int","print","str"],a:0,h:"Which word means whole number?",w:"int() changes text into a whole number."},
+ {l:3,t:"order",pic:"",q:"Build a program that asks a name and says hello. Tap the lines in order.",steps:["print(\"What is your name?\")","name = input()","print(\"Hello\", name)"],show:[2,0,1],code:true,h:"Ask first, listen, then answer.",w:"Ask, then input() listens, then print says hello."},
+ {l:3,t:"tap",pic:"",q:"Bug hunt! One line will crash. Tap it.",items:["name = input(\"Name? \")","age = input(\"Age? \")","print(age + 1)"],block:true,a:2,h:"age is text. Can you add 1 to text?",w:"age is text, so age + 1 crashes. Use int(input(...)) to fix it."},
  // ===== Level 5: boss castle =====
- {l:4,t:"mc",pic:"🔁",q:"What does this show?",code:"a = 4\nb = 6\na = b\nprint(a)",o:["4","6","10"],a:1,h:"a = b copies the value of b into a.",w:"a becomes 6, so print shows 6."},
- {l:4,t:"mc",pic:"➕",q:"What does this show?",code:"x = 5\nx = x + 2\nprint(x)",o:["5","7","52"],a:1,h:"Take the old x, add 2, and put it back.",w:"x was 5. Adding 2 makes 7."},
- {l:4,t:"sort",pic:"🗂️",q:"Sort all five values by data type.",b:[["int","int"],["float","float"],["str","str"],["bool","bool"]],items:[["99","int"],["3.14","float"],["\"99\"","str"],["False","bool"],["\"apple\"","str"]],h:"Look for quotes and for a dot.",w:"99 is int, 3.14 is float, \"99\" and \"apple\" are text, False is bool."},
- {l:4,t:"mc",pic:"🎯",q:"Be the computer! What does this show?",code:"name = \"Batool\"\nage = 13\nage = age + 1\nprint(name, \"is\", age)",o:["Batool is 13","Batool is 14","name is age"],a:1,h:"The box age changes before print.",w:"age becomes 14, so it shows Batool is 14."},
- {l:4,t:"mc",pic:"👾",q:"BOSS! The user types 5. What does this show?",code:"n = input(\"Number? \")\nprint(n * 2)",o:["10","55","Error"],a:1,h:"Remember: input() always gives text. Text times 2 repeats it.",w:"n is the text \"5\". Text times 2 repeats it: 55. Use int() to get 10!"}
+ {l:4,t:"mc",pic:"",q:"What does this show?",code:"a = 4\nb = 6\na = b\nprint(a)",o:["4","6","10"],a:1,h:"a = b copies the value of b into a.",w:"a becomes 6, so print shows 6."},
+ {l:4,t:"mc",pic:"",q:"What does this show?",code:"x = 5\nx = x + 2\nprint(x)",o:["5","7","52"],a:1,h:"Take the old x, add 2, and put it back.",w:"x was 5. Adding 2 makes 7."},
+ {l:4,t:"sort",pic:"",q:"Sort all five values by data type.",b:[["int","int"],["float","float"],["str","str"],["bool","bool"]],items:[["99","int"],["3.14","float"],["\"99\"","str"],["False","bool"],["\"apple\"","str"]],h:"Look for quotes and for a dot.",w:"99 is int, 3.14 is float, \"99\" and \"apple\" are text, False is bool."},
+ {l:4,t:"mc",pic:"",q:"Be the computer! What does this show?",code:"name = \"Batool\"\nage = 13\nage = age + 1\nprint(name, \"is\", age)",o:["Batool is 13","Batool is 14","name is age"],a:1,h:"The box age changes before print.",w:"age becomes 14, so it shows Batool is 14."},
+ {l:4,t:"mc",pic:"",q:"BOSS! The user types 5. What does this show?",code:"n = input(\"Number? \")\nprint(n * 2)",o:["10","55","Error"],a:1,h:"Remember: input() always gives text. Text times 2 repeats it.",w:"n is the text \"5\". Text times 2 repeats it: 55. Use int() to get 10!"}
 ];
 
 const $=id=>document.getElementById(id);
@@ -159,7 +159,7 @@ function renderMap(){
     const open=l===0||prog[l-1]>0;
     const b=mk("button","lvbtn"); b.disabled=!open;
     const info=mk("div",""); info.append(mk("b","",(l+1)+". "+v.n), mk("small","",v.t));
-    b.append(mk("span","ic",open?v.ic:"🔒"), info, mk("span","st",prog[l]?"⭐".repeat(prog[l]):""));
+    b.append(mk("span","ic",""), info, mk("span","st",!open?"Locked":prog[l]?prog[l]+" / 3":"Start"));
     b.onclick=()=>startLevel(l);
     m.appendChild(b);
   });
@@ -175,7 +175,7 @@ function show(){
   $("pic").textContent=it.pic; $("qt").textContent=it.q;
   $("hb").textContent=it.h; $("hb").classList.remove("show"); $("hintBtn").style.display="inline";
   $("why").classList.remove("show"); $("next").disabled=true;
-  $("next").textContent=i===qs.length-1?"Finish ✔":"Next ▶";
+  $("next").textContent=i===qs.length-1?"Finish ":"Next ";
   const a=$("area"); a.innerHTML="";
   if(it.code && it.t==="mc"){const p=mk("pre","code",it.code); a.appendChild(p);}
   R[it.t](it,a);
@@ -187,14 +187,14 @@ $("nextLv").onclick=()=>startLevel(L+1);
 
 function result(ok){
   if(locked)return; locked=true; if(ok)sc++;
-  $("why").textContent=(ok?"✅ ":"💪 Almost! ")+qs[i].w; $("why").classList.add("show"); $("next").disabled=false;
+  $("why").textContent=(ok?"Correct.  ":" Almost! ")+qs[i].w; $("why").classList.add("show"); $("next").disabled=false;
 }
 function finish(){
   const r=sc/qs.length, n=r>=0.85?3:r>=0.6?2:1;
   prog[L]=Math.max(prog[L],n); save();
-  $("badge").textContent=n===3?"🏆":n===2?"⚡":"🔧";
+  $("badge").textContent=n===3?"":n===2?"points ":"";
   $("title").textContent="Level "+(L+1)+" done: "+sc+" / "+qs.length;
-  $("stars").textContent="⭐".repeat(n)+"☆".repeat(3-n);
+  $("stars").textContent=n+" / 3 stars";
   $("msg").textContent=n===3?"Wow! Perfect work, Junior Code Inventor!":n===2?"Great job! You can play again for 3 stars.":"Good try! Play again, or ask your teacher about the tricky ones.";
   $("nextLv").style.display=L<LV.length-1?"inline-block":"none";
   go("done");
@@ -215,7 +215,7 @@ const R={
     a.appendChild(w);
   },
   sort(it,a){
-    const pick={}, rows=[]; const chk=mk("button","","Check ✔"); chk.disabled=true; chk.style.marginTop="6px";
+    const pick={}, rows=[]; const chk=mk("button","","Check "); chk.disabled=true; chk.style.marginTop="6px";
     it.items.forEach((x,n)=>{
       const r=mk("div","row"); r.appendChild(mk("span","",x[0]));
       it.b.forEach(([k,lab])=>{const b=mk("button","",lab);
@@ -231,7 +231,7 @@ const R={
   order(it,a){
     const got=[], mono=it.code?" mono":"";
     const seq=mk("div","seq"+mono,"Your program:"); const chips=mk("div","chips");
-    const rs=mk("button","","Start again"); rs.style.cssText="font-size:14px;padding:7px 12px;box-shadow:none;background:#fff;border:2px solid #CDBDF5";
+    const rs=mk("button","","Start again"); rs.style.cssText="font-size:14px;padding:7px 12px;box-shadow:none;background:#fff;border:2px solid #dedfd8";
     const upd=()=>{seq.textContent="Your program:\n"+got.map((g,n)=>(n+1)+".  "+it.steps[g]).join("\n");};
     it.show.forEach(g=>{const c=mk("button","chip"+mono,it.steps[g]);
       c.onclick=()=>{if(locked)return; got.push(g); c.disabled=true; upd();

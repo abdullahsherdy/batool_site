@@ -1,251 +1,90 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>رحلة باتول في البرمجة</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Baloo+Bhaijaan+2:wght@600;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#4C1D95; --teal:#8B5CF6; --amber:#FFD166; --pink:#FF6FB5; --mint:#2DD4BF; --fog:#F6F3FF; --mid:#160F2E;
-  --bg:var(--fog); --text:#241943; --card:#ffffff; --border:#E0D6FA; --locked:#b9aed6;
-  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:var(--mid); --text:#F1ECFF; --card:#221845; --border:#3a2c6b; --locked:#5b4f80; } }
-:root[data-theme="dark"]{ --bg:var(--mid); --text:#F1ECFF; --card:#221845; --border:#3a2c6b; --locked:#5b4f80; }
-*{box-sizing:border-box;}
-html{scroll-padding-top:env(safe-area-inset-top,0px);}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo',system-ui,sans-serif;overflow-x:hidden;}
-.hero{position:relative;overflow:hidden;text-align:center;padding:3rem 1.2rem 2.4rem;margin:0 0 1.6rem;color:#fff;
-  background:linear-gradient(150deg,#8B5CF6 0%,#C026D3 55%,#FF6FB5 100%);border-radius:0 0 36px 36px;box-shadow:0 18px 40px -22px rgba(124,58,237,.7);}
-.hero > *{position:relative;max-width:560px;margin-inline:auto;}
-.hero .avatar{font-size:3.4rem;display:inline-block;animation:bob 3s ease-in-out infinite;}
-.hero .eyebrow{display:inline-block;background:rgba(255,255,255,.2);border-radius:999px;padding:.2rem .9rem;font-weight:800;font-size:.85rem;margin-top:.4rem;}
-.hero h1{font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;font-size:2.1rem;margin:.5rem auto .5rem;line-height:1.35;}
-.hero p{font-size:1rem;line-height:1.7;margin:0 auto;opacity:.95;}
-.hero .en{font-size:.82rem;opacity:.8;margin-top:.5rem;}
-.spark{position:absolute;color:#FFD166;font-size:1.2rem;animation:twinkle 2.4s ease-in-out infinite;max-width:none;}
-@keyframes bob{50%{transform:translateY(-8px) rotate(-6deg);}}
-@keyframes twinkle{50%{opacity:.25;transform:scale(.6);}}
-@media (prefers-reduced-motion:reduce){.hero .avatar,.spark{animation:none;}}
-.path-wrap{position:relative;max-width:500px;margin:1rem auto 0;width:100%;aspect-ratio:400/2500;}
-.path-wrap svg{position:absolute;inset:0;width:100%;height:100%;}
-.path-glow{fill:none;stroke:var(--teal);stroke-width:18;opacity:.12;stroke-linecap:round;}
-.path-line{fill:none;stroke:url(#pathGrad);stroke-width:7;stroke-linecap:round;
-  stroke-dasharray:2600;stroke-dashoffset:2600;animation:draw 3.2s ease-out forwards .3s;}
-@media (prefers-reduced-motion:reduce){.path-line{animation:none;stroke-dashoffset:0;}}
-@keyframes draw{to{stroke-dashoffset:0;}}
-.node{position:absolute;transform:translate(-50%,-50%);width:118px;text-align:center;
-  opacity:0;transition:opacity .6s ease, transform .6s ease;cursor:pointer;}
-.node.visible{opacity:1;}
-.node .dot{width:56px;height:56px;border-radius:50%;background:var(--card);border:3px solid var(--teal);
-  display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto .4rem;
-  box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .25s ease;position:relative;}
-.node:hover .dot{transform:scale(1.08);}
-.node .num{position:absolute;top:-6px;right:-6px;background:var(--pink);color:#fff;box-shadow:0 2px 6px rgba(255,111,181,.5);
-  font-size:.68rem;font-weight:800;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;}
-.node .title{font-weight:700;font-size:.85rem;line-height:1.3;}
-.node .en{font-size:.62rem;opacity:.6;font-weight:600;}
-.node.locked .dot{border-color:var(--locked);border-style:dashed;opacity:.7;}
-.node.locked .title,.node.locked .en{opacity:.55;}
-.tooltip{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;
-  font-size:.68rem;padding:.3rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s ease;}
-.tooltip.show{opacity:1;}
-.fade-end{position:absolute;left:0;right:0;bottom:0;height:220px;background:linear-gradient(to bottom, transparent, var(--bg));pointer-events:none;}
-
-.sheet{position:fixed;inset:0;background:rgba(13,21,38,.5);display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:10;}
-.sheet.open{opacity:1;pointer-events:auto;}
-.sheet-card{background:var(--card);width:100%;max-width:500px;border-radius:20px 20px 0 0;padding:1.6rem 1.4rem calc(1.6rem + env(safe-area-inset-bottom,0px));
-  transform:translateY(100%);transition:transform .3s ease;max-height:75vh;overflow-y:auto;}
-.sheet.open .sheet-card{transform:translateY(0);}
-.sheet-card h2{margin:.2rem 0 .1rem;font-size:1.25rem;}
-.sheet-card .en{color:var(--teal);font-weight:700;font-size:.8rem;}
-.sheet-card p{line-height:1.75;font-size:.94rem;margin:.8rem 0;}
-.milestone{background:rgba(244,166,34,.1);border-right:3px solid var(--amber);padding:.6rem .8rem;border-radius:0 8px 8px 0;font-size:.88rem;margin-top:.6rem;}
-.close-btn{display:block;margin:1.1rem auto 0;background:var(--navy);color:#fff;border:none;padding:.6rem 1.4rem;
-  border-radius:999px;font-family:inherit;font-weight:700;font-size:.85rem;cursor:pointer;}
-
-.missions{max-width:500px;margin:0 auto;padding:0 1.2rem 1.4rem;}
-.missions h2{font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;font-size:1.4rem;margin:0 0 .1rem;}
-.missions .sub{font-size:.8rem;opacity:.6;margin:0 0 .8rem;}
-.mcard{display:flex;align-items:center;gap:.9rem;background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:.85rem 1rem;margin-bottom:.7rem;text-decoration:none;color:var(--text);box-shadow:0 5px 0 var(--border);transition:transform .2s ease;}
-.mcard:hover{transform:translateY(-3px) rotate(-.5deg);}
-.mcard:nth-child(3) .mi{background:rgba(45,212,191,.16);border-color:var(--mint);}
-.mcard:nth-child(5) .mi{background:rgba(255,111,181,.16);border-color:var(--pink);}
-.mcard:nth-child(6) .mi{background:rgba(255,209,102,.25);border-color:#F4A622;}
-.mcard.done{cursor:default;opacity:.85;}
-.mcard.done .go{font-size:.75rem;background:rgba(45,212,191,.16);color:#0f9d8c;border-radius:999px;padding:.2rem .6rem;white-space:nowrap;}
-.mcard .mi{width:46px;height:46px;border-radius:50%;background:rgba(0,196,179,.14);border:2px solid var(--teal);display:flex;
-  align-items:center;justify-content:center;font-size:1.35rem;flex:none;}
-.mcard .mt{font-weight:700;font-size:.95rem;line-height:1.35;}
-.mcard .me{font-size:.72rem;opacity:.65;font-weight:600;}
-.mcard .go{margin-inline-start:auto;color:var(--teal);font-weight:800;font-size:1.2rem;}
-.footer{text-align:center;padding:2rem 1.2rem 3rem;font-size:.8rem;opacity:.55;}
-.path-wrap{margin-top:2rem;}
-.road-title{text-align:center;font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;font-size:1.4rem;margin:2rem 0 0;}
-.road-title small{display:block;font-family:'Cairo',sans-serif;font-size:.8rem;opacity:.6;font-weight:600;}
-.node .dot{width:64px;height:64px;font-size:1.7rem;border:none;color:#fff;
-  background:linear-gradient(145deg,var(--c1,#8B5CF6),var(--c2,#C026D3));box-shadow:0 6px 0 rgba(76,29,149,.25),0 10px 22px -8px var(--c1,#8B5CF6);}
-.node:nth-of-type(6n+1) .dot{--c1:#2DD4BF;--c2:#0EA5A0;}
-.node:nth-of-type(6n+2) .dot{--c1:#8B5CF6;--c2:#6D28D9;}
-.node:nth-of-type(6n+3) .dot{--c1:#FF6FB5;--c2:#DB2777;}
-.node:nth-of-type(6n+4) .dot{--c1:#F59E0B;--c2:#F97316;}
-.node:nth-of-type(6n+5) .dot{--c1:#38BDF8;--c2:#6366F1;}
-.node:nth-of-type(6n) .dot{--c1:#FFD166;--c2:#F59E0B;}
-.node.current .dot::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:3px solid #2DD4BF;animation:pulse 1.8s ease-out infinite;}
-@keyframes pulse{from{transform:scale(.85);opacity:.9;}to{transform:scale(1.35);opacity:0;}}
-.node:hover .dot{transform:scale(1.12) rotate(-6deg);}
-.node .title{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.25rem .5rem;margin-top:.2rem;box-shadow:0 3px 0 var(--border);}
-.node.locked .dot{background:var(--card);border:3px dashed var(--locked);box-shadow:none;--c1:transparent;}
-.node.locked .dot::after{display:none;}
-.sheet-card{border-top:6px solid transparent;border-image:linear-gradient(90deg,#2DD4BF,#8B5CF6,#FF6FB5) 1;}
-.sheet-card h2{font-family:'Baloo Bhaijaan 2','Cairo',sans-serif;}
-.close-btn{background:linear-gradient(135deg,#8B5CF6,#FF6FB5);box-shadow:0 4px 0 #7c2d92;}
-/* hello intro, macOS style: pen-written "hello" swept left to right */
-.hello{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
-  background:linear-gradient(135deg,#8B5CF6,#C026D3,#FF6FB5,#FFD166,#2DD4BF);background-size:400% 400%;animation:hue 10s ease infinite;transition:opacity 1s ease,transform 1s ease;}
-.hello.gone{opacity:0;transform:scale(1.06);pointer-events:none;}
-.hello svg{width:min(90vw,640px);height:auto;overflow:visible;filter:drop-shadow(0 6px 20px rgba(76,29,149,.35));}
-.hello text{font-family:'Sacramento',cursive;font-size:230px;fill:#fff;}
-.hello .pen{transform-box:fill-box;transform-origin:left;transform:scaleX(0);animation:sweep 3s cubic-bezier(.55,.1,.35,1) forwards .3s;}
-.hello .name{color:#fff;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;font-weight:300;
-  font-size:clamp(1.6rem,6vw,2.6rem);letter-spacing:.35em;margin:-.4rem 0 0 .35em;opacity:0;animation:fadeIn 1.2s ease forwards 3s;}
-.hello .tap{color:#fff;font-size:.85rem;opacity:0;margin-top:2.2rem;animation:fadeIn 1s ease forwards 4.2s;}
-@keyframes sweep{to{transform:scaleX(1);}}
-@keyframes fadeIn{to{opacity:.9;}}
-@keyframes hue{50%{background-position:100% 50%;}}
-@media (prefers-reduced-motion:reduce){.hello,.hello .pen,.hello .name,.hello .tap{animation:none;opacity:1;}.hello .pen{transform:none;}.node .dot::after{display:none;}}
-</style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="playful.css">
 </head>
-<body>
-<div class="hello" id="hello" role="button" tabindex="0" aria-label="hello Batool — tap to start">
-  <svg viewBox="0 0 640 260"><defs><clipPath id="penClip"><rect class="pen" x="0" y="0" width="640" height="260"/></clipPath></defs>
-    <text x="320" y="190" text-anchor="middle" clip-path="url(#penClip)">hello</text></svg>
-  <div class="name">BATOOL</div>
-  <div class="tap">اضغطي عشان تبدأي ✨</div>
-</div>
-
-<div class="hero">
-  <span class="spark" style="top:14%;left:8%">✦</span><span class="spark" style="top:28%;right:10%;animation-delay:.8s">✧</span><span class="spark" style="bottom:18%;left:16%;animation-delay:1.4s">✦</span><span class="spark" style="bottom:12%;right:18%;animation-delay:.4s">💜</span>
-  <div class="avatar">👩🏻‍💻</div><br>
-  <div class="eyebrow">✨ Batool's Coding Journey ✨</div>
-  <h1>خطوة بخطوة، رحلتك في عالم البرمجة بدأت</h1>
-  <p>كل نقطة في الرحلة دي محطة هتتعلمي فيها حاجة جديدة، وهتبني بيها حاجة إنتِ اللي صممتيها.</p>
-  <p class="en">Tap any stop on the path to see what it holds.</p>
-</div>
-
-<div class="missions">
+<body class="home"><div class="hello" id="hello" role="dialog" aria-modal="true" aria-label="Welcome Batool"><svg class="hello-word" viewBox="0 0 448 210" role="img" aria-label="hello"><path d="M 30 159 C 56 141 110 47 92 31 C 73 16 45 148 48 171 C 53 139 80 112 87 130 C 93 146 66 176 87 177 C 103 177 119 160 130 146 C 158 111 171 149 144 158 C 121 166 121 142 128 137 C 112 170 140 192 166 169 C 193 145 240 44 220 29 C 201 14 170 132 177 165 C 183 192 207 171 224 150 C 245 125 282 43 265 30 C 245 14 219 126 226 160 C 233 193 259 174 277 152 C 295 130 324 125 322 148 C 320 176 290 191 283 168 C 277 149 295 131 310 137 C 330 151 347 157 371 139 C 388 126 402 111 417 112"/></svg><div class="hello-name" lang="en" dir="ltr">BATOOL</div><button id="enterSite">يلا نبدأ</button></div>
+<a class="skip" href="#main">انتقلي للمحتوى</a>
+<header class="site-header"><a href="index.html" lang="en" dir="ltr">Batool<span>Learning to code</span></a><a href="#lessons">الدروس</a></header>
+<main id="main">
+<section class="welcome">
+<p class="eyebrow" lang="en" dir="ltr">BATOOL’S CODING NOTEBOOK</p>
+<h1>كل مرة، خطوة جديدة.</h1>
+<p>أهلًا يا باتول. هنا دروسك وتمارينك، من أول فكرة لحد أول مشروع تكتبيه بنفسك.</p>
+<a class="text-link" href="#lessons">ابدئي بدروسك</a>
+</section>
+<div class="home-grid">
+<section class="missions" id="lessons">
   <h2>مهامك الأسبوعية</h2>
-  <p class="sub">Your missions — tap one to play</p>
+  <p class="sub">Choose a lesson and pick up where you left off.</p>
   <a class="mcard" href="first_task.html">
-    <div class="mi">🤖</div>
+
     <div><div class="mt">المهمة 1: الكمبيوتر والبرنامج</div><div class="me">Mission 1 · Computers &amp; Programs · 16 questions</div></div>
-    <div class="go">›</div>
+
   </a>
   <div class="mcard done">
-    <div class="mi">📄</div>
+
     <div><div class="mt">المهمة 2: ورقة الأنشطة</div><div class="me">Mission 2 · sent to you as a doc</div></div>
-    <div class="go">✓ اتبعتت</div>
+
   </div>
   <a class="mcard" href="second_task.html">
-    <div class="mi">📦</div>
+
     <div><div class="mt">المهمة 3: الصناديق والأنماط</div><div class="me">Mission 3 · Boxes &amp; Patterns · 15 challenges</div></div>
-    <div class="go">›</div>
+
   </a>
 
   <a class="mcard" href="third_task.html">
-    <div class="mi">🐍</div>
+
     <div><div class="mt">المهمة 4: بايثون!</div><div class="me">Mission 4 · Variables, print &amp; input</div></div>
-    <div class="go">›</div>
-  </a></div>
 
-<h2 class="road-title">🗺️ خريطة الرحلة<small>Your journey map</small></h2>
-<div class="path-wrap" id="pathWrap">
-  <svg viewBox="0 0 400 2500" preserveAspectRatio="none">
-    <defs><linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2DD4BF"/><stop offset=".35" stop-color="#8B5CF6"/><stop offset=".6" stop-color="#FF6FB5"/><stop offset="1" stop-color="#FFD166"/></linearGradient></defs>
-    <path class="path-glow" d="M100,150 C100,275 300,275 300,400 C300,525 100,525 100,650 C100,775 300,775 300,900 C300,1025 100,1025 100,1150 C100,1275 300,1275 300,1400 C300,1525 100,1525 100,1650 C100,1775 300,1775 300,1900 C300,2025 100,2025 100,2150 C100,2260 220,2260 220,2350"/>
-    <path class="path-line" d="M100,150 C100,275 300,275 300,400 C300,525 100,525 100,650 C100,775 300,775 300,900 C300,1025 100,1025 100,1150 C100,1275 300,1275 300,1400 C300,1525 100,1525 100,1650 C100,1775 300,1775 300,1900 C300,2025 100,2025 100,2150 C100,2260 220,2260 220,2350"/>
-  </svg>
-  <div class="fade-end"></div>
+  </a>
+
+  <a class="mcard" href="fourth_task.html">
+
+    <div><div class="mt">المهمة 5: قوى العمليات</div><div class="me">Mission 5 · Operator Powers · 5 levels</div></div>
+
+  </a></section>
+<section class="curriculum" aria-labelledby="road-title"><h2 id="road-title">خطة التعلّم</h2><p class="sub" lang="en" dir="ltr">From the foundations to your own project.</p><div id="pathWrap"></div></section>
 </div>
-
-<div class="footer">A learning journey built one step at a time — more of the path unlocks as we go.</div>
-
-<div class="sheet" id="sheet">
-  <div class="sheet-card">
-    <div class="en" id="sheetEn"></div>
-    <h2 id="sheetTitle"></h2>
-    <p id="sheetDesc"></p>
-    <div class="milestone" id="sheetMilestone"></div>
-    <button class="close-btn" onclick="closeSheet()">تمام / Got it</button>
-  </div>
-</div>
-
+</main>
+<footer class="footer" lang="en" dir="ltr"><span>All rights reserved.</span><a href="https://abdullahsherdy.tech">@eng.abdullahsherdy</a></footer>
 <script>
-const hello = document.getElementById('hello');
-function hideHello(){ if(!hello.isConnected) return; hello.classList.add('gone'); setTimeout(()=>hello.remove(),1000); }
-hello.addEventListener('click',hideHello); hello.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')hideHello();});
-setTimeout(hideHello,6500);
 const nodes = [
-  {x:100,y:150,icon:'🧭',title:'التفكير كمبرمجة',en:'Thinking Like a Programmer',
+  {x:100,y:150,title:'التفكير كمبرمجة',en:'Thinking Like a Programmer',
    desc:'نبدأ برحلة بسيطة نتعلم فيها إزاي نفكر زي المبرمجة، ونربط اللي اتعلمتيه في سكراتش بعالم البرمجة الحقيقي.',
    milestone:'تقدري ترتّبي خطوات أي مهمة بترتيب واضح وصح.'},
-  {x:300,y:400,icon:'🐍',title:'أساسيات بايثون',en:'Python Fundamentals',
+  {x:300,y:400,title:'أساسيات بايثون',en:'Python Fundamentals',
    desc:'أول مرة تكتبي فيها كود حقيقي! هنتعلم المتغيرات والشروط والتكرار والدوال، ونبني مع بعض أول لعبة صغيرة.',
    milestone:'أول برنامج كامل بتكتبيه بنفسك من الألف للياء.'},
-  {x:100,y:650,icon:'🧩',title:'البرمجة الكائنية',en:'Intro to OOP',
+  {x:100,y:650,title:'البرمجة الكائنية',en:'Intro to OOP',
    desc:'هنتعرف إزاي نبني حاجات زي "شخصية" أو "حيوان أليف" جوه الكود، ونفكر في المشروع بطريقة أكتر تنظيمًا.',
    milestone:'مشروع بسيط ببني فيه Class خاص بيكي.'},
-  {x:300,y:900,icon:'💾',title:'البيانات ومشاريع صغيرة',en:'Data & Mini Projects',
+  {x:300,y:900,title:'البيانات ومشاريع صغيرة',en:'Data & Mini Projects',
    desc:'هنتعلم نحفظ ونرجع للبيانات، ونبني برنامج بيفتكر حاجات زي قايمة مهام أو مذكرات شخصية.',
    milestone:'برنامج بيحتفظ بالبيانات حتى لو قفلتيه وفتحتيه تاني.'},
-  {x:100,y:1150,icon:'🌐',title:'عالم الويب',en:'Web Sprint',
+  {x:100,y:1150,title:'عالم الويب',en:'Web Sprint',
    desc:'استراحة ممتعة! هنتعلم HTML و CSS، ونبني صفحة ويب باسمك وبتصميمك إنتِ.',
    milestone:'صفحة ويب شخصية من تصميمك إنتِ.'},
-  {x:300,y:1400,icon:'🏆',title:'المشروع الختامي',en:'Capstone Project',
+  {x:300,y:1400,title:'المشروع الختامي',en:'Capstone Project',
    desc:'مشروعك الخاص، بفكرتك إنتِ، من التخطيط للتنفيذ للعرض النهائي قدام العيلة.',
    milestone:'مشروع كامل جاهز تعرضيه بفخر.'},
-  {x:100,y:1650,icon:'🔒',title:'تطوير الويب المتقدم',en:'Advanced Web Dev',locked:true},
-  {x:300,y:1900,icon:'🔒',title:'مشاريع حقيقية',en:'Real-World Projects',locked:true},
-  {x:100,y:2150,icon:'✨',title:'…',en:'the path continues',locked:true},
+  {x:100,y:1650,title:'تطوير الويب المتقدم',en:'Advanced Web Dev',locked:true},
+  {x:300,y:1900,title:'مشاريع حقيقية',en:'Real-World Projects',locked:true},
+  {x:100,y:2150,title:'…',en:'the path continues',locked:true},
 ];
-
+const hello=document.getElementById("hello"); const enter=document.getElementById("enterSite"); document.querySelector("main").inert=true; document.querySelector(".site-header").inert=true; function dismissHello(){hello.classList.add("gone");document.querySelector("main").inert=false;document.querySelector(".site-header").inert=false;document.querySelector(".text-link").focus();} enter.onclick=dismissHello; enter.focus(); hello.onkeydown=e=>{if(e.key==="Escape")dismissHello();if(e.key==="Tab"){e.preventDefault();enter.focus();}};
 const wrap = document.getElementById('pathWrap');
 nodes.forEach((n,i)=>{
-  const el = document.createElement('div');
-  el.className = 'node' + (n.locked ? ' locked' : '') + (i===0 ? ' current' : '');
-  el.style.left = (n.x/400*100) + '%';
-  el.style.top = (n.y/2500*100) + '%';
-  el.innerHTML = `<div class="dot">${n.icon}${!n.locked ? `<span class="num">${i+1}</span>` : ''}</div>
-    <div class="title">${n.title}</div><div class="en">${n.en}</div>
-    ${n.locked ? '<div class="tooltip">قريبًا 🔒</div>' : ''}`;
-  el.addEventListener('click', ()=> n.locked ? showTooltip(el) : openSheet(n));
-  wrap.appendChild(el);
+ const row = document.createElement(n.locked ? 'div' : 'details');
+ row.className = 'curriculum-row';
+ const heading = '<span class="lesson-number">'+String(i+1).padStart(2,'0')+'</span><span><span class="topic">'+n.title+'</span><span class="en" lang="en" dir="ltr">'+n.en+'</span></span>';
+ row.innerHTML = n.locked ? '<div class="upcoming">'+heading+'<span class="status">قريبًا</span></div>' : '<summary>'+heading+'<span class="status">التفاصيل</span></summary><div class="lesson-detail"><p>'+n.desc+'</p><p class="outcome">'+n.milestone+'</p></div>';
+ wrap.appendChild(row);
 });
-
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-},{threshold:.35});
-document.querySelectorAll('.node').forEach(n=>io.observe(n));
-
-function showTooltip(el){
-  const tip = el.querySelector('.tooltip');
-  tip.classList.add('show');
-  setTimeout(()=>tip.classList.remove('show'),1400);
-}
-function openSheet(n){
-  document.getElementById('sheetEn').textContent = n.en;
-  document.getElementById('sheetTitle').textContent = n.title;
-  document.getElementById('sheetDesc').textContent = n.desc;
-  document.getElementById('sheetMilestone').textContent = n.milestone;
-  document.getElementById('sheet').classList.add('open');
-}
-function closeSheet(){ document.getElementById('sheet').classList.remove('open'); }
-document.getElementById('sheet').addEventListener('click', e=>{ if(e.target.id==='sheet') closeSheet(); });
 </script>
 </body>
 </html>

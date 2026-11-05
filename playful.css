@@ -1,0 +1,69 @@
+:root { --bg:#fff8fc; --card:#fff; --ink:#38234c; --text:#38234c; --muted:#795e83; --line:#ead9ed; --soft:#f7eafa; --v:#9a4591; --d:#76336e; --violet:#9a4591; --violet-deep:#76336e; --s:#9a4591; --sun:#9a4591; }
+body { background:radial-gradient(ellipse at 5% 0%,#f4e4ff 0,transparent 45%),radial-gradient(ellipse at 95% 30%,#ffe3ef 0,transparent 45%),var(--bg); }
+.home { max-width:1200px; }
+.site-header { border-color:#e9d7ed; }
+.site-header a:first-child { color:#8f438b; }
+.welcome { position:relative; max-width:none; margin:28px 0 48px; padding:64px 48px; border-radius:32px; background:linear-gradient(115deg,#eee1ff,#ffe0ee 65%,#fff0d9); overflow:hidden; border:1px solid #fff; box-shadow:0 16px 48px #9c5a9910; }
+.welcome::after { content:'Batool'; position:absolute; left:30px; bottom:-35px; color:#b76caa20; font:italic 150px/1.2 Georgia,serif; pointer-events:none; }
+.welcome h1 { color:#6a347a; position:relative; z-index:1; }
+.welcome > p:not(.eyebrow) { color:#705075; }
+.text-link { padding:12px 24px; background:#93448e; color:white; border-radius:14px; text-decoration:none; box-shadow:0 6px 16px #8c3b8620; }
+.home-grid { gap:36px; }
+.missions,.curriculum { background:#ffffffa6; border:1px solid #fff; padding:28px; border-radius:24px; box-shadow:0 12px 40px #9a459109; }
+.mcard { border:0; border-radius:16px; margin:12px 0; padding:22px 20px; background:#f2eafa; transition:background .15s ease,transform .15s ease; }
+.mcard:nth-of-type(2) { background:#f8edf4; }
+.mcard:nth-of-type(3) { background:#e8f4f1; }
+.mcard:nth-of-type(4) { background:#fff1dd; }
+.mcard:nth-of-type(5) { background:#fce8f0; }
+.mcard:last-child { border:0; }
+.mcard[href]:hover { transform:translateY(-2px); }
+.mt { color:#543563; }
+.curriculum-row { border-color:#eaddee; }
+.lesson-number { background:#f2e6f9; color:#86488d; padding:5px 9px; border-radius:8px; }
+.card { border:1px solid #ead9ed; border-radius:24px; box-shadow:0 16px 60px #8b4f8710; }
+.card.hero { background:linear-gradient(135deg,#f0e3ff,#ffe6ee); }
+.hero h1 { color:#743d81; }
+button { border-radius:12px; }
+.opt,.lvbtn { border-radius:14px; background:#fffcff; }
+.lvbtn { padding:20px; }
+.lvbtn:nth-child(2n) { background:#faf1ff; }
+.bar i,.meter-fill { background:linear-gradient(90deg,#b577cc,#e889b1); }
+.hello { position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; flex-direction:column; background:linear-gradient(130deg,#bca3ec,#e69fca 45%,#fac2b2 75%,#f8d9a8); color:white; transition:opacity .7s ease,visibility .7s; }
+.hello.gone { opacity:0; visibility:hidden; pointer-events:none; }
+.hello-word { font:italic clamp(100px,22vw,230px)/1.1 'Segoe Script','Brush Script MT',cursive; letter-spacing:-.08em; padding:0 30px 20px; animation:hello-reveal 1.8s ease-out both; }
+.hello-name { font:300 clamp(24px,5vw,40px)/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; letter-spacing:.3em; margin-left:.3em; }
+.hello button { margin-top:48px; background:#ffffff26; border:1px solid #ffffff80; color:white; min-width:180px; font-weight:500; }
+@keyframes hello-reveal { from { opacity:0; clip-path:inset(0 100% 0 0); } to { opacity:1; clip-path:inset(0); } }
+@media(max-width:760px) { .welcome { padding:36px 24px; margin-top:20px; border-radius:24px; } .welcome::after { font-size:100px; bottom:-20px; } .missions,.curriculum { padding:22px 18px; } .home-grid { gap:24px; } }
+@media(prefers-reduced-motion:reduce) { .hello-word { animation:none; } .hello { transition:none; } .mcard[href]:hover { transform:none; } }
+/* Quiet paper surfaces, with color reserved for lessons and actions. */
+:root { --bg:#f7f8f2; --card:#fffefa; --ink:#303e3a; --text:#303e3a; --muted:#596b63; --line:#dce4dc; --soft:#edf3ea; --v:#456e5b; --d:#345643; --violet:#456e5b; --violet-deep:#345643; --s:#456e5b; --sun:#456e5b; }
+body { background:var(--bg); }
+.site-header { border-color:var(--line); }
+.site-header a:first-child { color:#456452; }
+.welcome { background:#e8efdf; border-color:#e0e8d7; box-shadow:none; }
+.welcome::after { color:#738a6514; }
+.welcome h1,.hero h1 { color:#3c5748; }
+.welcome > p:not(.eyebrow) { color:#52664f; }
+.text-link { background:#456e5b; box-shadow:none; }
+.missions,.curriculum { background:#fffefa; border-color:#e4e8df; box-shadow:none; }
+.mcard { background:#eef1e8; }
+.mcard:nth-of-type(2) { background:#f1ede5; }
+.mcard:nth-of-type(3) { background:#e7efed; }
+.mcard:nth-of-type(4) { background:#f5efdf; }
+.mcard:nth-of-type(5) { background:#f1e9e8; }
+.mt { color:#394b40; }
+.curriculum-row { border-color:var(--line); }
+.lesson-number { background:#edf1e6; color:#4f6650; }
+.card { background:#fffefa; border-color:var(--line); box-shadow:0 12px 40px #344e3a06; }
+.card.hero { background:#e8efdf; }
+.opt,.lvbtn { background:#fffefa; }
+.lvbtn:nth-child(2n) { background:#f1f4ec; }
+.bar i,.meter-fill { background:#75977b; }
+.hello { background:radial-gradient(ellipse at 20% 20%,#d5dfce,transparent 65%),radial-gradient(ellipse at 85% 80%,#ded6c9,transparent 65%),#b9ccc2; color:#344f43; text-align:center; padding:32px 24px; gap:0; }
+.hello-word { display:block; flex:none; width:min(76vw,500px); height:auto; margin:0 auto 12px; padding:0; overflow:visible; animation:none; }
+.hello-word path { fill:none; stroke:currentColor; stroke-width:7; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1800; stroke-dashoffset:1800; animation:write-hello 2.8s cubic-bezier(.3,.05,.4,1) forwards; }
+.hello-name { font-size:clamp(20px,4vw,30px); letter-spacing:.24em; margin:0; padding-left:.24em; text-align:center; }
+.hello button { align-self:center; margin:36px 0 0; padding:12px 32px; min-height:48px; border-radius:999px; background:#ffffff75; border-color:#ffffff90; color:#344f43; box-shadow:0 4px 16px #344f4308; }
+@keyframes write-hello { to { stroke-dashoffset:0; } }
+@media(prefers-reduced-motion:reduce) { .hello-word path { animation:none; stroke-dashoffset:0; } }

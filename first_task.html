@@ -4,76 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CodeQuest Lab — Mission 1</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --violet:#7C3AED; --violet-deep:#5B21B6;
-    --mint:#2DD4BF; --coral:#FF6B6B; --sun:#FFD166;
-    --ink:#241943; --bg:#F6F3FF; --card:#FFFFFF;
-    box-sizing:border-box;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){ --bg:#1B1533; --card:#2A2150; --ink:#F1ECFF; }
-  }
+
+
   *{box-sizing:border-box;}
   html{scroll-padding-top:env(safe-area-inset-top,0px);}
   body{
-    margin:0; min-height:100%; background:var(--bg); color:var(--ink);
-    font-family:'Nunito',sans-serif; display:flex; justify-content:center;
+    margin:0; min-height:100%;
+     display:flex; justify-content:center;
     padding:32px 16px;
   }
-  h1,h2,h3,.display{font-family:'Baloo 2',cursive;}
+  h1,h2,h3,.display{}
   .stage{ width:100%; max-width:620px; }
 
   /* Hero / intro */
   .hero{
-    background:linear-gradient(160deg,var(--violet) 0%,var(--violet-deep) 100%);
-    border-radius:28px; padding:36px 28px; color:#fff; text-align:center;
-    box-shadow:0 18px 40px -18px rgba(124,58,237,.55);
+
+    border-radius:28px; padding:36px 28px;  text-align:center;
+
   }
   .bot{font-size:64px; line-height:1; display:block; margin-bottom:6px;}
   .hero h1{font-size:28px; margin:6px 0 4px; font-weight:800;}
   .hero p{margin:0 0 20px; opacity:.92; font-size:15px; line-height:1.5;}
   .badgebar{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:22px;}
   .badgebar span{
-    background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+     border:1px solid rgba(255,255,255,.35);
     padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600;
   }
   button{
-    font-family:'Baloo 2',cursive; font-weight:700; font-size:17px;
+     font-weight:700; font-size:17px;
     border:none; border-radius:16px; padding:14px 26px; cursor:pointer;
-    background:var(--sun); color:var(--violet-deep);
-    box-shadow:0 8px 0 #E0A93B; transition:transform .08s;
+
+     transition:transform .08s;
   }
-  button:active{transform:translateY(4px); box-shadow:0 4px 0 #E0A93B;}
-  button.secondary{background:#fff; color:var(--violet-deep); box-shadow:0 8px 0 #C9BEEA;}
-  button:disabled{opacity:.45; cursor:not-allowed; box-shadow:none;}
+  button:active{transform:translateY(4px); }
+  button.secondary{  }
+  button:disabled{opacity:.45; cursor:not-allowed; }
   button:focus-visible{outline:3px solid #fff; outline-offset:2px;}
 
   /* Quiz card */
   .card{
-    background:var(--card); border-radius:24px; padding:26px 24px 22px;
-    box-shadow:0 14px 34px -20px rgba(36,25,67,.35); display:none;
+     border-radius:24px; padding:26px 24px 22px;
+     display:none;
   }
   .card.active{display:block;}
-  .meter-wrap{background:#EAE3FF; border-radius:999px; height:12px; overflow:hidden; margin-bottom:6px;}
-  .meter-fill{height:100%; background:linear-gradient(90deg,var(--mint),var(--violet)); width:0%; transition:width .35s;}
-  .meta-row{display:flex; justify-content:space-between; font-size:13px; font-weight:700; color:var(--violet); margin-bottom:18px;}
-  .qtext{font-size:19px; font-weight:800; line-height:1.4; margin:0 0 18px; font-family:'Baloo 2',cursive;}
+  .meter-wrap{ border-radius:999px; height:12px; overflow:hidden; margin-bottom:6px;}
+  .meter-fill{height:100%;  width:0%; transition:width .35s;}
+  .meta-row{display:flex; justify-content:space-between; font-size:13px; font-weight:700;  margin-bottom:18px;}
+  .qtext{font-size:19px; font-weight:800; line-height:1.4; margin:0 0 18px; }
   .opt{
-    display:block; width:100%; text-align:left; background:#F0EBFF;
+    display:block; width:100%; text-align:left;
     border:2px solid transparent; border-radius:14px; padding:13px 16px;
-    margin-bottom:10px; font-family:'Nunito',sans-serif; font-weight:600;
-    font-size:15px; color:#241943; cursor:pointer; box-shadow:none;
+    margin-bottom:10px;  font-weight:600;
+    font-size:15px;  cursor:pointer;
   }
-  .opt:hover:not(:disabled){border-color:var(--violet);}
-  .opt.correct{background:#E4FBF6; border-color:var(--mint); color:#0F766E;}
-  .opt.wrong{background:#FFEDED; border-color:var(--coral); color:#B91C1C;}
+  .opt:hover:not(:disabled){}
+  .opt.correct{  }
+  .opt.wrong{  }
   .explain{
     display:none; margin-top:14px; padding:14px 16px; border-radius:14px;
-    background:#F1ECFF; color:#241943; font-size:14.5px; line-height:1.5;
+      font-size:14.5px; line-height:1.5;
   }
   .explain.show{display:block;}
   .nextrow{margin-top:18px; text-align:right;}
@@ -82,28 +72,30 @@
   .result{display:none; text-align:center;}
   .result.active{display:block;}
   .rank{font-size:46px; margin:10px 0 2px;}
-  .score-num{font-size:52px; font-weight:800; font-family:'Baloo 2',cursive; color:var(--violet);}
-  .best{font-size:13px; color:#6D5FA6; margin-top:2px;}
+  .score-num{font-size:52px; font-weight:800;  }
+  .best{font-size:13px;  margin-top:2px;}
 
   @media (max-width:420px){ .hero{padding:28px 18px;} .card{padding:22px 18px;} }
 
-  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20; background:#fff; color:#5B21B6;
-        font-family:"Nunito",sans-serif; font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px;
-        border-radius:999px; box-shadow:0 4px 12px rgba(36,25,67,.18); border:1px solid #E0D6FA;}
+  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20;
+         font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px;
+        border-radius:999px;  border:1px solid #E0D6FA;}
 </style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="playful.css">
 </head>
 <body>
-<a class="back" href="index.html">← Back to the journey</a>
-<div class="stage">
+<a class="skip" href="#main">Skip to lesson</a>
+<a class="back" href="index.html"> Back to the journey</a>
+<main class="stage" id="main">
 
   <div class="card active" id="intro">
     <div class="hero">
-      <span class="bot">🤖</span>
+
       <h1>CodeQuest Lab — Mission 1</h1>
-      <p>Nova the lab-bot needs a Junior Code Inventor to prove they've mastered the
-         basics of how computers and programs really work. Ready to run the mission?</p>
+      <p>Review how computers work, what programs do, and how to think through a problem. Answer 16 questions at your own pace.</p>
       <div class="badgebar" id="badgeShelf"><span>No badges yet — earn your first below!</span></div>
-      <button id="startBtn">Start Mission ▶</button>
+      <button id="startBtn">Start Mission </button>
     </div>
   </div>
 
@@ -113,22 +105,21 @@
     <p class="qtext" id="qText"></p>
     <div id="optsWrap"></div>
     <div class="explain" id="explainBox"></div>
-    <div class="nextrow"><button id="nextBtn" disabled>Next ▶</button></div>
+    <div class="nextrow"><button id="nextBtn" disabled>Next </button></div>
   </div>
 
   <div class="card result" id="resultCard">
-    <div class="rank" id="rankEmoji">🏆</div>
+    <div class="rank" id="rankEmoji"></div>
     <h2 id="rankTitle">Circuit Master</h2>
     <div class="score-num" id="finalScore">14/16</div>
-    <p id="rankMsg">Nova is impressed — your foundations are rock solid!</p>
+    <p id="rankMsg">Your foundations are rock solid.</p>
     <div class="best" id="bestLine"></div>
     <div style="margin-top:22px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      <button id="retryBtn" class="secondary">Retry Mission ↺</button>
+      <button id="retryBtn" class="secondary">Retry Mission </button>
     </div>
   </div>
 
-</div>
-
+</main>
 <script>
 const QUESTIONS = [
   {q:"A computer follows instructions exactly as written, or figures out what you probably meant?",
@@ -200,7 +191,7 @@ function showBadges(){
   const best = safeGet('cql_best_score');
   const shelf = document.getElementById('badgeShelf');
   if(best !== null){
-    shelf.innerHTML = `<span>⭐ Best score: ${best}/${QUESTIONS.length}</span>`;
+    shelf.innerHTML = `<span> Best score: ${best}/${QUESTIONS.length}</span>`;
   }
 }
 showBadges();
@@ -267,10 +258,10 @@ function showResult(){
   document.getElementById('finalScore').textContent = `${score}/${QUESTIONS.length}`;
   let emoji, title, msg;
   const pct = score / QUESTIONS.length;
-  if(pct >= 0.9){ emoji='🏆'; title='Lab Legend'; msg='Nova is speechless — total mastery of the basics!'; }
-  else if(pct >= 0.7){ emoji='⚡'; title='Circuit Master'; msg='Nova is impressed — your foundations are rock solid!'; }
-  else if(pct >= 0.5){ emoji='🔧'; title='Code Cadet'; msg="Good progress! A quick review of a few ideas and you're set."; }
-  else { emoji='🔋'; title='Rookie Inventor'; msg="Great first try — let's revisit a few ideas together next time."; }
+  if(pct >= 0.9){ emoji=''; title='Lab Legend'; msg='You have mastered the basics.'; }
+  else if(pct >= 0.7){ emoji='points '; title='Circuit Master'; msg='Your foundations are rock solid.'; }
+  else if(pct >= 0.5){ emoji=''; title='Code Cadet'; msg="Good progress! A quick review of a few ideas and you're set."; }
+  else { emoji=''; title='Rookie Inventor'; msg="Great first try — let's revisit a few ideas together next time."; }
   document.getElementById('rankEmoji').textContent = emoji;
   document.getElementById('rankTitle').textContent = title;
   document.getElementById('rankMsg').textContent = msg;

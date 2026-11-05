@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>CodeQuest Lab — Mission 5: Operator Powers</title>
+<style>
+
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{margin:0;    display:flex; justify-content:center; padding:56px 14px 24px;}
+  h1,h2,.d{}
+  .stage{width:100%; max-width:560px;}
+  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20;    font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px; border-radius:999px;  border:1px solid #E0D6FA;}
+  .card{ border-radius:24px; padding:22px 20px;  display:none;}
+  .card.on{display:block;}
+  .hero{  text-align:center; padding:28px 18px;}
+  .hero .bot{font-size:56px; display:block;}
+  .hero h1{margin:4px 0; font-size:27px;}
+  .hero p{margin:0 0 14px; font-size:16px; line-height:1.5;}
+  .hero .total{display:inline-block;  border-radius:999px; padding:6px 16px; font-weight:800; font-size:15px; margin:0 0 16px;}
+  button{ font-weight:800; font-size:18px; border:none; border-radius:16px; padding:12px 24px; cursor:pointer;   }
+  button:active{transform:translateY(3px); }
+  button:disabled{opacity:.4; cursor:not-allowed;}
+  .lvbtn{display:flex; align-items:center; gap:12px; width:100%; text-align:left;    border:2px solid #E0D6FA; margin-bottom:12px; padding:10px 14px; }
+  .lvbtn:active{}
+  .lvbtn .ic{font-size:30px; width:44px; text-align:center;}
+  .lvbtn b{display:block;  font-size:18px; line-height:1.2;}
+  .lvbtn small{font-size:13px; opacity:.7; font-weight:800;}
+  .lvbtn .st{margin-left:auto; font-size:18px; white-space:nowrap;}
+  .tag{display:inline-block;   font-weight:800; font-size:13px; border-radius:999px; padding:5px 12px;}
+  .bar{height:12px;  border-radius:999px; overflow:hidden; margin:10px 0 14px;}
+  .bar i{display:block; height:100%; width:0;  transition:width .3s;}
+  .pic{font-size:34px; margin:4px 0 8px;}
+  .q{font-size:20px; font-weight:800; line-height:1.4; margin:0 0 6px;  white-space:pre-line;}
+  .hint{   font-size:15px; padding:4px 0;  text-decoration:underline;}
+  .hb,.why{display:none; margin-top:10px; border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.5;  }
+  .show{display:block;}
+  .hm + .hm{margin-top:8px;}
+  pre.code{  border-radius:14px; padding:12px 14px; margin:8px 0 12px;  font-size:16px; line-height:1.6; overflow-x:auto; white-space:pre;}
+  .opt{display:block; width:100%; text-align:left;   border:2px solid transparent; border-radius:14px; padding:13px 15px; margin-bottom:10px;  font-weight:800; font-size:17px; }
+  .opt:active{transform:none; }
+  .ok{  }
+  .no{  }
+  .opt.no,.tk.no{opacity:.75;}
+  .next{text-align:right; margin-top:14px;}
+  .center{text-align:center;}
+  .taps{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0;}
+  .taps.blk{flex-direction:column;}
+  .tk{   border:3px solid transparent;  font-weight:700; font-size:16px; padding:11px 14px; text-align:left; border-radius:12px;}
+  .tk:active{transform:none;}
+  .row{display:flex; align-items:center; gap:8px; margin-bottom:10px;  border-radius:14px; padding:8px 10px; flex-wrap:wrap; border:2px solid transparent;}
+  .row span{flex:1 1 120px; font-weight:800; font-size:16px; }
+  .row button{font-size:14px; padding:7px 10px;    border:2px solid #dedfd8;}
+  .row button.sel{  }
+  .row button.good{  }
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:8px 0;}
+  .chip{   border:2px solid #dedfd8; font-size:15px; padding:9px 12px;  font-weight:800; text-align:left;}
+  .chip.mono{ font-weight:700;}
+  .chip:disabled{opacity:.3;}
+  .seq{min-height:48px;  border-radius:14px; padding:8px 12px; margin:8px 0; font-weight:800; font-size:15px; line-height:1.7; white-space:pre-line;}
+  .seq.mono{ font-weight:700;}
+  .stars{font-size:32px; letter-spacing:4px;}
+  .trophy{display:none;  border-radius:16px; padding:12px; font-weight:800; margin-top:6px;}
+
+  /* Mission 5 additions: live score, hint ladder, feedback colours, typing box */
+  .scorebar{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;}
+  .scoreside{display:flex; align-items:center; gap:10px;}
+  .chipscore{position:relative;   border:2px solid #FFE08A; border-radius:999px; padding:3px 12px;  font-weight:800; font-size:17px;}
+  .chipscore.pop{animation:pop .4s ease;}
+  .plus{position:absolute; right:8px; top:-4px;  font-weight:800; font-size:16px; pointer-events:none; animation:floatup .9s ease-out forwards;}
+  .streak{font-weight:800; font-size:14px; }
+  .worth{font-size:13px; font-weight:800; opacity:.6; margin:0 0 2px;}
+  .why.try{}
+  .why.good{}
+  .why.bad{}
+  input.tin{width:100%;  font-size:17px; font-weight:700; padding:13px 14px; border:2px solid #dedfd8; border-radius:14px;   outline:none;}
+  input.tin:focus{}
+  input.tin:disabled{opacity:.7;}
+  .stat{font-size:15px; font-weight:800; opacity:.7; margin:2px 0 8px;}
+
+
+  @media (prefers-reduced-motion:reduce){.chipscore.pop,.plus{animation:none;}}
+</style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="playful.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to lesson</a>
+<a class="back" href="index.html"> Back to the journey</a>
+<main class="stage" id="main">
+
+  <div class="card hero on" id="map">
+
+    <h1>Mission 5: Operators</h1>
+    <p>Plus, minus, times, divide, remainder, power, and switching types. Finish a level to open the next one. Each hint costs 2 points. Try an answer first.</p>
+    <div class="total" id="total"></div>
+    <div id="levels"></div>
+    <div class="trophy" id="trophy"> You finished every level! Operator Master! Well done.</div>
+  </div>
+
+  <div class="card" id="quiz">
+    <div class="scorebar">
+      <span class="tag" id="lvl"></span>
+      <span class="scoreside"><span class="streak" id="streak"></span><span class="chipscore" id="score">points  0</span></span>
+    </div>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="pic" id="pic"></div>
+    <p class="q" id="qt"></p>
+    <div class="worth" id="worth"></div>
+    <button class="hint" id="hintBtn"> Need a hint? (−2 points)</button>
+    <div class="hb" id="hb"></div>
+    <div id="area" style="margin-top:10px"></div>
+    <div class="why" id="why" role="status" aria-live="polite"></div>
+    <div class="next"><button id="next" disabled>Next </button></div>
+  </div>
+
+  <div class="card center" id="done">
+    <div style="font-size:54px" id="badge"></div>
+    <h2 id="title" style="margin:0"></h2>
+    <div class="d" id="sparks" style="font-size:28px; color:#375c46; margin:4px 0;"></div>
+    <div class="stars" id="stars"></div>
+    <div class="stat" id="stat"></div>
+    <p id="msg" style="font-size:17px;line-height:1.5"></p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button id="toMap" style="background:#fff;box-shadow:0 6px 0 #dedfd8"> Map</button>
+      <button id="nextLv">Next level </button>
+    </div>
+  </div>
+</main>
+<script>
+const LV = [
+  {n:"Plus Meadow", ic:"", t:"+, - and * with print()"},
+  {n:"Divide Dunes", ic:"", t:"/, // and %"},
+  {n:"Order Tower", ic:"", t:"Who goes first? Brackets and **"},
+  {n:"Switch Lab", ic:"", t:"input(), int(), float() and text"},
+  {n:"Boss Castle", ic:"", t:"Shortcuts, errors and the boss"}
+];
+
+// h = [hint 1 (nudge), hint 2 (bigger clue)]   m = message for each WRONG choice (same order as the options)
+const Q = [
+ // ===== Level 1: Plus Meadow =====
+ {l:0,t:"tap",pic:"",q:"These symbols and numbers are in a line of code. Tap the OPERATOR, the symbol that does an action.",items:["8","+","2"],a:1,
+  h:["Numbers are values. One of these is the action.","Which one tells Python to DO something?"],
+  m:["8 is a value, not an action.",null,"2 is a value, not an action."],
+  w:"+ is the operator. 8 and 2 are the values it works on."},
+ {l:0,t:"mc",pic:"",q:"What does this show on the screen?",code:"print(8 + 2)",o:["10","8 + 2","82"],a:0,
+  h:["There are no quotes, so Python does the maths.","8 plus 2."],
+  m:[null,"Without quotes, Python does the maths. It does not show the sum as text.","82 happens with text. These are numbers, so Python adds them."],
+  w:"Python adds 8 and 2 and shows 10."},
+ {l:0,t:"mc",pic:"",q:"Which symbol means TIMES in Python?",o:["x","*","#"],a:1,
+  h:["Look above the number 8 on your keyboard.","It looks like a little star."],
+  m:["The letter x is just a letter. Python does not read it as times.",null,"# starts a comment in Python. Try again!"],
+  w:"* is the times symbol. 3 * 4 gives 12."},
+ {l:0,t:"mc",pic:"",q:"What does this show?",code:"apples = 4\npears = 3\nprint(apples + pears)",o:["7","apples + pears","43"],a:0,
+  h:["print shows what is INSIDE the boxes, not their names.","4 plus 3."],
+  m:[null,"print shows the values inside the boxes, not the box names.","43 would join text. These boxes hold numbers, so Python adds."],
+  w:"The boxes hold 4 and 3. Python adds them: 7."},
+ {l:0,t:"order",pic:"",q:"Build a program that shows 15. Tap the lines in the right order.",steps:["price = 5","total = price * 3","print(total)"],show:[2,0,1],code:true,
+  h:["The box price must be filled before you use it.","Make the box, calculate, then show."],
+  w:"price is 5, total is 5 * 3 = 15, then print shows it."},
+ {l:0,t:"type",pic:"",q:"Your turn to type! What does this show?",code:"print(6 * 7)",ans:["42"],ph:"Type the answer",
+  h:["6 times 7.","Think of your times table: 6 x 7."],
+  tm:{"13":"13 is 6 + 7. The symbol here is * (times)."},
+  w:"6 * 7 = 42."},
+
+ // ===== Level 2: Divide Dunes =====
+ {l:1,t:"mc",pic:"",q:"The sneaky one! What does this show?",code:"print(8 / 2)",o:["4","4.0","2"],a:1,
+  h:["Remember the surprise from the session!","/ always gives a float: a number with a decimal point."],
+  m:["So close! The value is 4, but / always shows a float: 4.0.",null,"8 divided by 2 is not 2. Think: 2 + 2 + 2 + 2 = 8."],
+  w:"/ always gives a float, even when the answer is whole: 4.0."},
+ {l:1,t:"mc",pic:"",q:"What does this show?",code:"print(7 / 2)",o:["3","3.5","4"],a:1,
+  h:["/ keeps the decimal part.","7 divided by 2 is three and a half."],
+  m:["3 is what // gives. The single / keeps the decimals.",null,"Python does not round up. 7 / 2 keeps the .5."],
+  w:"7 / 2 = 3.5. The / operator keeps the decimal part."},
+ {l:1,t:"sort",pic:"",q:"17 candies, 5 friends. Match each expression to its answer.",b:[["3","3"],["2","2"],["3.4","3.4"]],items:[["17 // 5","3"],["17 % 5","2"],["17 / 5","3.4"]],
+  h:["// = how many whole shares each. % = what is left over.","/ is the decimal one. 17 / 5 is 3.4."],
+  w:"17 // 5 = 3 (each), 17 % 5 = 2 (left over), 17 / 5 = 3.4."},
+ {l:1,t:"mc",pic:"",q:"What does this show?",code:"print(20 % 6)",o:["3","2","14"],a:1,
+  h:["% is the remainder: what is LEFT after sharing equally.","6 goes into 20 three times (18). What is left?"],
+  m:["3 is what 20 // 6 gives. % shows what is LEFT.",null,"14 is 20 - 6. The remainder is what is left after sharing equally."],
+  w:"20 = 6 x 3 + 2, so 20 % 6 = 2."},
+ {l:1,t:"mc",pic:"",q:"n % 2 gives 1. What kind of number is n?",o:["An even number","An odd number","Zero"],a:1,
+  h:["Even numbers share into 2 equally. Nothing is left.","If 1 is left over, it cannot be shared equally."],
+  m:["Even numbers give 0 as the remainder.",null,"0 % 2 gives 0, not 1."],
+  w:"A remainder of 1 means odd. Example: 7 % 2 = 1."},
+ {l:1,t:"type",pic:"",q:"Type the answer. What does this show?",code:"print(45 // 10)",ans:["4"],ph:"Type the answer",
+  h:["// keeps only the whole part.","45 divided by 10 is 4.5. Keep only the whole part."],
+  tm:{"4.5":"That is what / gives. // keeps only the whole part: 4.","5":"// does not round up. It cuts off the decimal part.","4.0":"// with whole numbers gives a whole number, no .0."},
+  w:"45 // 10 = 4. It cuts off the decimals."},
+
+ // ===== Level 3: Order Tower =====
+ {l:2,t:"mc",pic:"points ",q:"** means power. What does this show?",code:"print(2 ** 3)",o:["6","8","9"],a:1,
+  h:["2 ** 3 means 2 x 2 x 2.","Three 2s multiplied together."],
+  m:["6 is 2 * 3. The ** repeats the multiplying: 2 x 2 x 2.",null,"9 is 3 ** 2. Here the 2 is used three times."],
+  w:"2 x 2 x 2 = 8."},
+ {l:2,t:"mc",pic:"",q:"Who goes first? What does this show?",code:"print(2 + 3 * 4)",o:["20","14","24"],a:1,
+  h:["Multiplication goes before addition.","First do 3 * 4, then add 2."],
+  m:["20 comes from going left to right. Python does * first!",null,"24 would be 2 * 3 * 4. There is a + here."],
+  w:"3 * 4 = 12 first, then 2 + 12 = 14."},
+ {l:2,t:"mc",pic:"",q:"Brackets change the story! What does this show?",code:"print((2 + 3) * 4)",o:["14","20","12"],a:1,
+  h:["Brackets go FIRST.","2 + 3 is 5, then 5 * 4."],
+  m:["14 is the answer WITHOUT brackets. Here the brackets go first.",null,"12 is 3 * 4. Do not forget the 2 inside the brackets!"],
+  w:"(2 + 3) = 5 first, then 5 * 4 = 20."},
+ {l:2,t:"mc",pic:"",q:"Same level means left to right. What does this show?",code:"print(10 - 4 - 3)",o:["9","3","-3"],a:1,
+  h:["Same level: go from left to right.","10 - 4 is 6, then 6 - 3."],
+  m:["9 is 10 - (4 - 3). Python goes left to right: (10 - 4) - 3.",null,"Check the first step: 10 - 4 is 6, not 14."],
+  w:"(10 - 4) - 3 = 6 - 3 = 3."},
+ {l:2,t:"order",pic:"",q:"Be the computer! Python works out 2 * (3 + 4) ** 2 in steps. Tap the steps in Python's order.",steps:["(3 + 4) = 7","7 ** 2 = 49","2 * 49 = 98"],show:[2,0,1],
+  h:["Brackets first, then **, then *.","Start with what is inside the brackets."],
+  w:"Brackets first (7), then power (49), then times (98)."},
+ {l:2,t:"tap",pic:"",q:"Bug hunt! Python must show the average of 4 and 6, which is 5. Tap the line that gives the WRONG answer.",items:["print((4 + 6) / 2)","print(4 + 6 / 2)","print(10 / 2)"],block:true,a:1,
+  h:["Which line needs brackets but does not have them?","Python does 6 / 2 first in one of these."],
+  m:["That one is fine: the brackets make it 5.0.",null,"10 / 2 = 5.0. That one is correct too."],
+  w:"4 + 6 / 2 does 6 / 2 first (3.0), then adds 4: 7.0. Brackets fix it."},
+
+ // ===== Level 4: Switch Lab =====
+ {l:3,t:"mc",pic:"",q:"Batool types 13. What is age?",code:"age = input(\"Age? \")",o:["A number (int)","Text (str)","A decimal (float)"],a:1,
+  h:["Remember the secret about input().","input() always gives the same type back."],
+  m:["Not a number! input() always gives text, even if you type digits.",null,"13 has no dot, and input() always gives text anyway."],
+  w:"input() always gives text (str), even when you type a number."},
+ {l:3,t:"mc",pic:"",q:"What happens when this runs and the user types 13?",code:"age = input(\"Age? \")\nprint(age + 1)",o:["It shows 14","TypeError (it crashes)","It shows 131"],a:1,
+  h:["age is text. Can you add a number to text?","Python cannot mix text and numbers with +."],
+  m:["14 would work only if age was a number. It is text!",null,"131 would need the 1 to be text too. Here 1 is a number."],
+  w:"Text + number is a TypeError. Fix: age = int(input(...))."},
+ {l:3,t:"sort",pic:"",q:"What do the switches give? Match each one.",b:[["12","12"],["3","3"],["4.0","4.0"]],items:[["int(\"12\")","12"],["int(3.9)","3"],["float(4)","4.0"]],
+  h:["int() cuts the decimals. It does not round.","float() makes a decimal number, so 4 becomes 4.0."],
+  w:"int(\"12\") is 12, int(3.9) cuts to 3, float(4) is 4.0."},
+ {l:3,t:"mc",pic:"",q:"Careful with the quotes! What does this show?",code:"print(\"5\" + \"3\")",o:["8","53","Error"],a:1,
+  h:["Quotes mean text.","+ glues text together."],
+  m:["8 would work with numbers. These have quotes, so they are text.",null,"Text + text is allowed. It glues them together."],
+  w:"\"5\" and \"3\" are text, so + glues them: 53."},
+ {l:3,t:"tap",pic:"",q:"Bug hunt! One line will crash. Tap it.",items:["price = float(input(\"Price? \"))","count = int(input(\"How many? \"))","print(\"Total: \" + price * count)"],block:true,a:2,
+  h:["Look at the + in the last line.","Can you join text and a number with + ?"],
+  m:["float(input(...)) is correct. It makes a decimal number.","int(input(...)) is correct. It makes a whole number."],
+  w:"\"Total: \" is text and price * count is a number, so + crashes. Use print(\"Total:\", price * count)."},
+ {l:3,t:"code",pic:"",q:"Type the line: ask \"Age? \" and keep the answer in the box age as a WHOLE NUMBER.",re:/^age=int\(input\(("[^"]*"|'[^']*')?\)\)$/,near:/age.*int.*input|age.*input.*int/,ph:"age = ...",
+  h:["The pattern is: box = int(input(...)).","Ask first (input), then switch (int). Count the closing brackets: two!"],
+  slip:" So close! This is a typing slip, not a wrong idea. Check the brackets and quotes: age = int(input(\"Age? \"))",
+  cm:"That line is not right yet. Use the pattern: box = int(input(...)).",
+  w:"age = int(input(\"Age? \")) asks, then switches the text into a whole number."},
+
+ // ===== Level 5: Boss Castle =====
+ {l:4,t:"mc",pic:"",q:"Be the computer! What does this show?",code:"score = 10\nscore -= 3\nscore *= 2\nprint(score)",o:["7","14","20"],a:1,
+  h:["Go line by line. Write the value of score after each line.","10, then 7, then 7 * 2."],
+  m:["7 is the value after line 2. There is one more line!",null,"20 would be 10 * 2. Do the -= 3 first."],
+  w:"10, then 7, then 14. The shortcuts change the box and keep the result."},
+ {l:4,t:"mc",pic:"",q:"Be the computer! What does this show?",code:"a = 17\nb = 5\nprint(a // b, a % b)",o:["3 2","3.4 2","2 3"],a:0,
+  h:["// is the whole shares. % is what is left.","print shows two values with a space between."],
+  m:[null,"3.4 is what / gives. // keeps only the whole part: 3.","The order matters: // comes first, then %."],
+  w:"17 // 5 = 3 and 17 % 5 = 2, so it shows 3 2."},
+ {l:4,t:"tap",pic:"",q:"Bug hunt! One line crashes with a ZeroDivisionError. Tap it.",items:["friends = 0","share = 10 // friends","print(share)"],block:true,a:1,
+  h:["You cannot share candies between 0 friends.","Which line divides?"],
+  m:["Putting 0 in a box is fine. The problem comes later.",null,"print is fine. The crash happens before it gets there."],
+  w:"10 // 0 crashes: nobody can divide by zero."},
+ {l:4,t:"mc",pic:"",q:"Read the error! The user types hello. Which error appears?",code:"n = int(input(\"Number? \"))",o:["TypeError","ValueError","NameError"],a:1,
+  h:["int() got text, which is the right type. But can hello be a number?","Right type, wrong value."],
+  m:["TypeError means the wrong type. Here the type (text) is fine, but the value is not.",null,"NameError means a name is missing. All the names here exist."],
+  w:"ValueError: int() cannot turn the text hello into a number."},
+ {l:4,t:"code",pic:"",q:"Type the line that adds 1 to the box score using a SHORTCUT operator.",re:/^score\+=1$/,near:/score.*\+.*1/,canon:"score+=1",ph:"score ...",
+  h:["The shortcut joins the operator and the equals sign.","+= means: add to the box."],
+  slip:" So close! Check your spelling, and use the shortcut form with += (not score = score + 1).",
+  cm:"That is not the shortcut yet. It starts with score, then the two symbols +=, then the number.",
+  w:"score += 1 means the same as score = score + 1."},
+ {l:4,t:"order",pic:"",q:"Build the seconds converter. Tap the lines in the right order.",steps:["seconds = int(input(\"Seconds? \"))","minutes = seconds // 60","left = seconds % 60","print(minutes, \"min\", left, \"sec\")"],show:[3,1,0,2],code:true,alt:[[0,2,1,3]],
+  h:["Input first, then work it out, then print.","Both calculations need seconds, so seconds comes first. Print comes last."],
+  w:"Ask for seconds, calculate minutes and left, then print. 135 becomes 2 min 15 sec."},
+ {l:4,t:"mc",pic:"",q:"BOSS! The user types 9 and then 4. What does this show?",code:"a = int(input(\"A? \"))\nb = int(input(\"B? \"))\nprint(a % b + a // b * 2)",o:["5","6","12"],a:0,
+  h:["Remember who goes first: * // % go before +.","a % b is 1. a // b is 2. Then 2 * 2, then add."],
+  m:[null,"6 comes from going left to right. The * goes before the +.","12 is too big. Work out each part: 9 % 4 = 1 and 9 // 4 = 2."],
+  w:"9 % 4 = 1 and 9 // 4 = 2. Then 2 * 2 = 4 and 1 + 4 = 5."}
+];
+
+const BASE=10, TRY2=5, HINT=2, N=LV.length;
+const $=id=>document.getElementById(id);
+function mk(tag,cls,txt){const e=document.createElement(tag); if(cls)e.className=cls; if(txt!==undefined)e.textContent=txt; return e;}
+function go(id){["map","quiz","done"].forEach(x=>$(x).classList.toggle("on",x===id));}
+
+let prog={s:Array(N).fill(0),p:Array(N).fill(0)};
+try{const s=JSON.parse(localStorage.getItem("cql_m5")||"null");
+  if(s&&Array.isArray(s.s)&&Array.isArray(s.p)&&s.s.length===N&&s.p.length===N)prog=s;}catch(e){}
+function save(){try{localStorage.setItem("cql_m5",JSON.stringify(prog));}catch(e){}}
+
+let L=0,qs=[],i=0,sc=0,streak=0,att=0,hints=0,locked=false,st={first:0,hints:0};
+
+function renderMap(){
+  const m=$("levels"); m.innerHTML="";
+  LV.forEach((v,l)=>{
+    const open=l===0||prog.s[l-1]>0;
+    const b=mk("button","lvbtn"); b.disabled=!open;
+    const info=mk("div",""); info.append(mk("b","",(l+1)+". "+v.n), mk("small","",v.t+(prog.p[l]?"  ·  best score: "+prog.p[l]:"")));
+    b.append(mk("span","ic",""), info, mk("span","st",!open?"Locked":prog.s[l]?prog.s[l]+" / 3":"Start"));
+    b.onclick=()=>startLevel(l);
+    m.appendChild(b);
+  });
+  const tot=prog.p.reduce((x,y)=>x+y,0);
+  $("total").textContent=tot?"Total points: "+tot:"Choose a level to begin.";
+  $("trophy").style.display=prog.s.every(x=>x>0)?"block":"none";
+  go("map");
+}
+function startLevel(l){L=l; qs=Q.filter(x=>x.l===l); i=0; sc=0; streak=0; st={first:0,hints:0}; setScore(false); go("quiz"); show();}
+
+function worth(){return Math.max(2,(att===0?BASE:TRY2)-HINT*hints);}
+function refreshWorth(){$("worth").textContent="This one is worth up to "+worth()+" points "+(streak>=2?"  (+2  streak bonus)":"");}
+function setScore(anim,gain){
+  const c=$("score"); c.textContent=sc+" points";
+  $("streak").textContent=streak>=2?streak+" in a row":"";
+  if(anim&&gain){c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+    const p=mk("span","plus","+"+gain); c.appendChild(p); setTimeout(()=>p.remove(),950);}
+}
+
+function show(){
+  const it=qs[i]; locked=false; att=0; hints=0;
+  $("lvl").textContent="Level "+(L+1)+" · "+LV[L].n+"  ·  "+(i+1)+"/"+qs.length;
+  $("fill").style.width=(i/qs.length*100)+"%";
+  $("pic").textContent=it.pic; $("qt").textContent=it.q;
+  $("hb").innerHTML=""; $("hb").classList.remove("show");
+  $("hintBtn").style.display="inline"; $("hintBtn").textContent=" Need a hint? (−"+HINT+" points)";
+  $("why").className="why"; $("why").textContent="";
+  $("next").disabled=true; $("next").textContent=i===qs.length-1?"Finish ":"Next ";
+  refreshWorth(); setScore(false);
+  const a=$("area"); a.innerHTML="";
+  if(typeof it.code==="string"){a.appendChild(mk("pre","code",it.code));}
+  R[it.t](it,a);
+}
+
+$("hintBtn").onclick=()=>{
+  if(locked||hints>=2)return;
+  const it=qs[i];
+  $("hb").appendChild(mk("div","hm"," Hint "+(hints+1)+": "+it.h[hints]));
+  $("hb").classList.add("show"); hints++; st.hints++;
+  refreshWorth();
+  if(hints>=2)$("hintBtn").style.display="none"; else $("hintBtn").textContent=" One more hint (−"+HINT+" points)";
+};
+$("next").onclick=()=>{i++; i<qs.length?show():finish();};
+$("toMap").onclick=renderMap;
+$("nextLv").onclick=()=>startLevel(L+1);
+
+// returns "ok" | "retry" | "fail" | "locked"
+function attempt(ok,msg){
+  if(locked)return "locked";
+  const it=qs[i], why=$("why");
+  if(ok){
+    locked=true;
+    let pts=worth(), bonus=0;
+    if(att===0){st.first++; streak++; if(streak>=3)bonus=2;} else streak=0;
+    pts+=bonus; sc+=pts; setScore(true,pts);
+    why.className="why show good";
+    why.textContent="Correct.  "+it.w+"   +"+pts+" points "+(bonus?"  ( streak bonus!)":"");
+    endQ(); return "ok";
+  }
+  if(att===0){
+    att++; refreshWorth();
+    why.className="why show try";
+    why.textContent=" "+(msg||"Not quite.")+" Try again for "+worth()+" points!";
+    return "retry";
+  }
+  locked=true; streak=0; setScore(false);
+  why.className="why show bad";
+  why.textContent=" Almost! "+it.w+"   (+0 points. Now you know it for next time!)";
+  endQ(); return "fail";
+}
+function endQ(){$("next").disabled=false; $("hintBtn").style.display="none"; $("worth").textContent="";}
+
+function finish(){
+  const max=BASE*qs.length, r=Math.min(1,sc/max), n=r>=0.8?3:r>=0.55?2:1;
+  prog.s[L]=Math.max(prog.s[L],n); prog.p[L]=Math.max(prog.p[L],sc); save();
+  $("badge").textContent=n===3?"":n===2?"points ":"";
+  $("title").textContent="Level "+(L+1)+" done: "+LV[L].n;
+  $("sparks").textContent=sc+" points";
+  $("stars").textContent=n+" / 3 stars";
+  $("stat").textContent="First-try answers: "+st.first+" / "+qs.length+"  ·  Hints used: "+st.hints+"  ·  Perfect run: "+max+"+ points ";
+  const last=L===LV.length-1;
+  $("msg").textContent=n===3?(last?"Operator Master! You beat the boss!":"Wow! Perfect power, Junior Code Inventor!"):n===2?"Great job! Play again for 3 stars. Try with fewer hints!":"Good try! Play again, or ask your teacher about the tricky ones.";
+  $("nextLv").style.display=L<LV.length-1?"inline-block":"none";
+  go("done");
+}
+
+function norm(s){return s.trim().replace(/^["']|["']$/g,"").replace(/\s+/g," ");}
+function lev(a,b){const d=[];for(let x=0;x<=a.length;x++){d[x]=[x];}for(let y=1;y<=b.length;y++)d[0][y]=y;
+  for(let x=1;x<=a.length;x++)for(let y=1;y<=b.length;y++)d[x][y]=Math.min(d[x-1][y]+1,d[x][y-1]+1,d[x-1][y-1]+(a[x-1]===b[y-1]?0:1));
+  return d[a.length][b.length];}
+
+const R={
+  mc(it,a){
+    it.o.forEach((t,n)=>{const b=mk("button","opt",t);
+      b.onclick=()=>{if(locked||b.disabled)return; const ok=n===it.a;
+        const r=attempt(ok,it.m&&it.m[n]);
+        if(ok){b.classList.add("ok");}
+        else{b.classList.add("no"); b.disabled=true; if(r==="fail")a.querySelectorAll(".opt")[it.a].classList.add("ok");}
+      };
+      a.appendChild(b);});
+  },
+  tap(it,a){
+    const w=mk("div","taps"+(it.block?" blk":""));
+    it.items.forEach((t,n)=>{const b=mk("button","tk",t);
+      b.onclick=()=>{if(locked||b.disabled)return; const ok=n===it.a;
+        const r=attempt(ok,it.m&&it.m[n]);
+        if(ok){b.classList.add("ok");}
+        else{b.classList.add("no"); b.disabled=true; if(r==="fail")w.children[it.a].classList.add("ok");}
+      };
+      w.appendChild(b);});
+    a.appendChild(w);
+  },
+  sort(it,a){
+    const pick={}, rows=[]; const chk=mk("button","","Check "); chk.disabled=true; chk.style.marginTop="6px";
+    it.items.forEach((x,n)=>{
+      const r=mk("div","row"); r.appendChild(mk("span","",x[0]));
+      it.b.forEach(([k,lab])=>{const b=mk("button","",lab);
+        b.onclick=()=>{if(locked)return; pick[n]=k; r.classList.remove("no"); [...r.querySelectorAll("button")].forEach(z=>z.classList.remove("sel")); b.classList.add("sel");
+          chk.disabled=Object.keys(pick).length<it.items.length;};
+        r.appendChild(b);});
+      rows.push(r); a.appendChild(r);});
+    chk.onclick=()=>{if(locked)return; let all=true;
+      it.items.forEach((x,n)=>{const ok=pick[n]===x[1]; if(!ok)all=false; rows[n].classList.toggle("ok",ok); rows[n].classList.toggle("no",!ok);});
+      const r=attempt(all,"The red rows are not right yet. Change them and press Check again.");
+      if(r==="fail"){it.items.forEach((x,n)=>{[...rows[n].querySelectorAll("button")].forEach((bb,idx)=>{bb.classList.toggle("good",it.b[idx][0]===x[1]);});});}
+    };
+    a.appendChild(chk);
+  },
+  order(it,a){
+    const got=[], mono=it.code?" mono":"";
+    const seq=mk("div","seq"+mono,"Your program:"); const chips=mk("div","chips");
+    const rs=mk("button","","Start again"); rs.style.cssText="font-size:14px;padding:7px 12px;box-shadow:none;background:#fff;border:2px solid #dedfd8";
+    const upd=()=>{seq.textContent="Your program:\n"+got.map((g,n)=>(n+1)+".  "+it.steps[g]).join("\n");};
+    const reset=()=>{got.length=0; seq.classList.remove("no"); seq.textContent="Your program:"; [...chips.children].forEach(c=>c.disabled=false);};
+    it.show.forEach(g=>{const c=mk("button","chip"+mono,it.steps[g]);
+      c.onclick=()=>{if(locked)return; got.push(g); c.disabled=true; upd();
+        if(got.length===it.steps.length){
+          const good=got.every((v,n)=>v===n)||(it.alt||[]).some(s=>s.every((v,n)=>v===got[n]));
+          seq.classList.add(good?"ok":"no");
+          const r=attempt(good,"That order does not work. Think about what must happen first.");
+          if(r==="retry")setTimeout(()=>{if(!locked)reset();},1600);
+          if(r==="fail"){seq.classList.remove("no"); seq.classList.add("ok"); seq.textContent="Correct program:\n"+it.steps.map((s,n)=>(n+1)+".  "+s).join("\n");}
+        }};
+      chips.appendChild(c);});
+    rs.onclick=()=>{if(locked)return; reset();};
+    a.append(chips,seq,rs);
+  },
+  type(it,a){typing(it,a,false);},
+  code(it,a){typing(it,a,true);}
+};
+
+function typing(it,a,isCode){
+  const inp=mk("input","tin"); inp.type="text"; inp.placeholder=it.ph||"Type here"; inp.autocomplete="off"; inp.autocapitalize="off"; inp.spellcheck=false;
+  inp.setAttribute("autocorrect","off"); inp.setAttribute("aria-label","Your answer");
+  const chk=mk("button","","Check "); chk.style.marginTop="10px";
+  const run=()=>{
+    if(locked)return; const raw=inp.value; if(!raw.trim()){inp.focus(); return;}
+    let ok, msg;
+    if(isCode){
+      const s=raw.replace(/[\u201C\u201D]/g,'"').replace(/[\u2018\u2019]/g,"'").replace(/\s+/g,"");
+      ok=it.re.test(s);
+      if(!ok&&(it.near.test(s)||(it.canon&&lev(s,it.canon)<=2))){ // typing slip: no try is used
+        const w=$("why"); w.className="why show try"; w.textContent=it.slip; return;
+      }
+      msg=it.cm;
+    }else{
+      const v=norm(raw); ok=it.ans.includes(v); msg=(it.tm&&it.tm[v])||"That is not it. Use a hint if you need one.";
+    }
+    const r=attempt(ok,msg);
+    if(ok||r==="fail"){inp.disabled=true; chk.disabled=true; inp.classList.toggle("ok",ok); inp.classList.toggle("no",!ok);}
+  };
+  chk.onclick=run; inp.onkeydown=e=>{if(e.key==="Enter")run();};
+  a.append(inp,chk);
+}
+renderMap();
+</script>
+</body>
+</html>
