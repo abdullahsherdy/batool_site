@@ -3,109 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CodeQuest Lab — Mission 1</title>
-<style>
+<title>Computers &amp; Programs | Batool’s Code Studio</title>
 
-
-  *{box-sizing:border-box;}
-  html{scroll-padding-top:env(safe-area-inset-top,0px);}
-  body{
-    margin:0; min-height:100%;
-     display:flex; justify-content:center;
-    padding:32px 16px;
-  }
-  h1,h2,h3,.display{}
-  .stage{ width:100%; max-width:620px; }
-
-  /* Hero / intro */
-  .hero{
-
-    border-radius:28px; padding:36px 28px;  text-align:center;
-
-  }
-  .bot{font-size:64px; line-height:1; display:block; margin-bottom:6px;}
-  .hero h1{font-size:28px; margin:6px 0 4px; font-weight:800;}
-  .hero p{margin:0 0 20px; opacity:.92; font-size:15px; line-height:1.5;}
-  .badgebar{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:22px;}
-  .badgebar span{
-     border:1px solid rgba(255,255,255,.35);
-    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600;
-  }
-  button{
-     font-weight:700; font-size:17px;
-    border:none; border-radius:16px; padding:14px 26px; cursor:pointer;
-
-     transition:transform .08s;
-  }
-  button:active{transform:translateY(4px); }
-  button.secondary{  }
-  button:disabled{opacity:.45; cursor:not-allowed; }
-  button:focus-visible{outline:3px solid #fff; outline-offset:2px;}
-
-  /* Quiz card */
-  .card{
-     border-radius:24px; padding:26px 24px 22px;
-     display:none;
-  }
-  .card.active{display:block;}
-  .meter-wrap{ border-radius:999px; height:12px; overflow:hidden; margin-bottom:6px;}
-  .meter-fill{height:100%;  width:0%; transition:width .35s;}
-  .meta-row{display:flex; justify-content:space-between; font-size:13px; font-weight:700;  margin-bottom:18px;}
-  .qtext{font-size:19px; font-weight:800; line-height:1.4; margin:0 0 18px; }
-  .opt{
-    display:block; width:100%; text-align:left;
-    border:2px solid transparent; border-radius:14px; padding:13px 16px;
-    margin-bottom:10px;  font-weight:600;
-    font-size:15px;  cursor:pointer;
-  }
-  .opt:hover:not(:disabled){}
-  .opt.correct{  }
-  .opt.wrong{  }
-  .explain{
-    display:none; margin-top:14px; padding:14px 16px; border-radius:14px;
-      font-size:14.5px; line-height:1.5;
-  }
-  .explain.show{display:block;}
-  .nextrow{margin-top:18px; text-align:right;}
-
-  /* Result */
-  .result{display:none; text-align:center;}
-  .result.active{display:block;}
-  .rank{font-size:46px; margin:10px 0 2px;}
-  .score-num{font-size:52px; font-weight:800;  }
-  .best{font-size:13px;  margin-top:2px;}
-
-  @media (max-width:420px){ .hero{padding:28px 18px;} .card{padding:22px 18px;} }
-
-  .back{position:fixed; top:calc(env(safe-area-inset-top,0px) + 8px); left:10px; z-index:20;
-         font-weight:800; font-size:13px; text-decoration:none; padding:7px 12px;
-        border-radius:999px;  border:1px solid #E0D6FA;}
-</style>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="playful.css">
+<link rel="stylesheet" href="studio-mockups/studio.css"><link rel="stylesheet" href="studio-live.css"><link rel="stylesheet" href="mission-navigation.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to lesson</a>
-<a class="back" href="index.html"> Back to the journey</a>
+<nav class="mission-navigation" aria-label="Studio navigation"><a href="index.html#missions">Back to missions</a></nav>
 <main class="stage" id="main">
 
-  <div class="card active" id="intro">
-    <div class="hero">
-
-      <h1>CodeQuest Lab — Mission 1</h1>
-      <p>Review how computers work, what programs do, and how to think through a problem. Answer 16 questions at your own pace.</p>
-      <div class="badgebar" id="badgeShelf"><span>No badges yet — earn your first below!</span></div>
-      <button id="startBtn">Start Mission </button>
-    </div>
-  </div>
-
-  <div class="card" id="quizCard">
+  <p class="label">Mission 01 / 04</p><h1>Computers &amp; Programs</h1><div class="card challenge active" id="quizCard">
     <div class="meter-wrap"><div class="meter-fill" id="meterFill"></div></div>
     <div class="meta-row"><span id="qCounter">Question 1 / 16</span><span id="scoreLive">Score: 0</span></div>
-    <p class="qtext" id="qText"></p>
+    <h2 tabindex="-1" id="qText"></h2>
     <div id="optsWrap"></div>
-    <div class="explain" id="explainBox"></div>
-    <div class="nextrow"><button id="nextBtn" disabled>Next </button></div>
+    <div class="explain" id="explainBox" role="status"></div>
+    <div class="nextrow"><button id="nextBtn" disabled>Next challenge</button></div>
   </div>
 
   <div class="card result" id="resultCard">
@@ -172,8 +85,15 @@ const QUESTIONS = [
    ex:"Tracing means walking through each step in order to see exactly what the computer would do."}
 ];
 
-let idx = 0, score = 0;
-const introCard = document.getElementById('intro');
+let saved;
+try { saved = JSON.parse(localStorage.getItem('cql_m1_checkpoint')); } catch {}
+const usable = saved && Number.isInteger(saved.index) && saved.index >= 0 && saved.index < QUESTIONS.length && Number.isInteger(saved.points) && saved.points >= 0 && saved.points <= saved.index + Number(saved.solved === true);
+let idx = usable ? saved.index : 0, score = usable ? saved.points : 0;
+let tried = usable && saved.tried === true, solved = usable && saved.solved === true;
+function checkpoint(){
+  safeSet('cql_m1_checkpoint', JSON.stringify({index:idx,points:score,tried,solved}));
+}
+
 const quizCard = document.getElementById('quizCard');
 const resultCard = document.getElementById('resultCard');
 const qText = document.getElementById('qText');
@@ -187,25 +107,9 @@ const scoreLive = document.getElementById('scoreLive');
 function safeGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
 function safeSet(key,val){ try{ localStorage.setItem(key,val); }catch(e){} }
 
-function showBadges(){
-  const best = safeGet('cql_best_score');
-  const shelf = document.getElementById('badgeShelf');
-  if(best !== null){
-    shelf.innerHTML = `<span> Best score: ${best}/${QUESTIONS.length}</span>`;
-  }
-}
-showBadges();
 
-let started = false;
-document.getElementById('startBtn').addEventListener('click', (e)=>{
-  if(started) return;
-  started = true;
-  e.target.disabled = true;
-  introCard.classList.remove('active');
-  quizCard.classList.add('active');
-  renderQuestion();
-});
 
+renderQuestion();
 function renderQuestion(){
   const item = QUESTIONS[idx];
   qText.textContent = item.q;
@@ -214,11 +118,15 @@ function renderQuestion(){
   meterFill.style.width = `${(idx/QUESTIONS.length)*100}%`;
   explainBox.classList.remove('show');
   explainBox.textContent = '';
-  nextBtn.disabled = true;
+  nextBtn.disabled = !solved;
+  nextBtn.hidden = !solved;
+  nextBtn.textContent = idx === QUESTIONS.length-1 ? 'Finish mission' : 'Next challenge';
+  if(solved) explainBox.textContent = item.ex;
   optsWrap.innerHTML = '';
   item.opts.forEach((opt,i)=>{
     const b = document.createElement('button');
     b.className = 'opt';
+    b.disabled = solved;
     b.textContent = opt;
     b.addEventListener('click', ()=>selectAnswer(i));
     optsWrap.appendChild(b);
@@ -228,14 +136,20 @@ function renderQuestion(){
 function selectAnswer(choice){
   const item = QUESTIONS[idx];
   const buttons = optsWrap.querySelectorAll('.opt');
-  buttons.forEach(b=>b.disabled = true);
-  if(choice === item.correct){
-    buttons[choice].classList.add('correct');
-    score++;
-  } else {
-    buttons[choice].classList.add('wrong');
-    buttons[item.correct].classList.add('correct');
+  if(choice !== item.correct){
+    tried = true;
+    checkpoint();
+    explainBox.textContent = (idx === 0 ? 'Imagine a recipe with a step missing. Would the computer know what you meant?' : item.ex) + ' Try again.';
+    return;
   }
+  if(!tried) score++;
+  solved = true;
+  checkpoint();
+  buttons.forEach(button => button.disabled = true);
+  buttons[choice].classList.add('correct');
+  nextBtn.hidden = false;
+  nextBtn.disabled = false;
+  nextBtn.focus();
   explainBox.textContent = item.ex;
   explainBox.classList.add('show');
   scoreLive.textContent = `Score: ${score}`;
@@ -244,7 +158,10 @@ function selectAnswer(choice){
 
 nextBtn.addEventListener('click', ()=>{
   idx++;
+  solved = tried = false;
   if(idx < QUESTIONS.length){
+    checkpoint();
+    qText.focus();
     renderQuestion();
   } else {
     meterFill.style.width = '100%';
@@ -253,6 +170,8 @@ nextBtn.addEventListener('click', ()=>{
 });
 
 function showResult(){
+  try { localStorage.removeItem('cql_m1_checkpoint'); } catch {}
+  try { localStorage.setItem("cql_m1_finished", "1"); } catch {}
   quizCard.classList.remove('active');
   resultCard.classList.add('active');
   document.getElementById('finalScore').textContent = `${score}/${QUESTIONS.length}`;
@@ -277,7 +196,7 @@ function showResult(){
 }
 
 document.getElementById('retryBtn').addEventListener('click', ()=>{
-  idx = 0; score = 0;
+  idx = 0; score = 0; tried = solved = false; checkpoint();
   resultCard.classList.remove('active');
   quizCard.classList.add('active');
   renderQuestion();

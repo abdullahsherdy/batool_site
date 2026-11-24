@@ -1,1 +1,3 @@
 .ottotime
+node_modules/
+dist/

@@ -66,10 +66,11 @@
 </style>
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="playful.css">
+<link rel="stylesheet" href="mission-navigation.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to lesson</a>
-<a class="back" href="index.html"> Back to the journey</a>
+<nav class="mission-navigation" aria-label="Studio navigation"><a href="index.html#missions">Back to missions</a></nav>
 <main class="stage" id="main">
   <div class="card hero on" id="intro">
 
@@ -207,6 +208,7 @@ const R={
 };
 
 function finish(){
+  try { localStorage.setItem("cql_m2_finished", "1"); } catch {}
   $("quiz").classList.remove("on"); $("done").classList.add("on");
   const n=score>=13?3:score>=10?2:1;
   $("stars").textContent=n+" / 3 stars";

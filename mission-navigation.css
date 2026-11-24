@@ -1,0 +1,19 @@
+.mission-navigation {
+  display: flex;
+  width: min(90%, 820px);
+  margin: 18px auto;
+}
+.mission-navigation a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #b5b0c6;
+  border-radius: 10px;
+  background: #f5f1fa;
+  color: #38344d;
+  font: 600 1rem system-ui, sans-serif;
+  text-decoration: none;
+}
+.mission-navigation a:hover { background: #e6e0ef; }
+.mission-navigation a:focus-visible { outline: 3px solid #685187; outline-offset: 3px; }

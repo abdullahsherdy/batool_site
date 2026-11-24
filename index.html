@@ -1,90 +1,12 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>رحلة باتول في البرمجة</title>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="playful.css">
-</head>
-<body class="home"><div class="hello" id="hello" role="dialog" aria-modal="true" aria-label="Welcome Batool"><svg class="hello-word" viewBox="0 0 448 210" role="img" aria-label="hello"><path d="M 30 159 C 56 141 110 47 92 31 C 73 16 45 148 48 171 C 53 139 80 112 87 130 C 93 146 66 176 87 177 C 103 177 119 160 130 146 C 158 111 171 149 144 158 C 121 166 121 142 128 137 C 112 170 140 192 166 169 C 193 145 240 44 220 29 C 201 14 170 132 177 165 C 183 192 207 171 224 150 C 245 125 282 43 265 30 C 245 14 219 126 226 160 C 233 193 259 174 277 152 C 295 130 324 125 322 148 C 320 176 290 191 283 168 C 277 149 295 131 310 137 C 330 151 347 157 371 139 C 388 126 402 111 417 112"/></svg><div class="hello-name" lang="en" dir="ltr">BATOOL</div><button id="enterSite">يلا نبدأ</button></div>
-<a class="skip" href="#main">انتقلي للمحتوى</a>
-<header class="site-header"><a href="index.html" lang="en" dir="ltr">Batool<span>Learning to code</span></a><a href="#lessons">الدروس</a></header>
-<main id="main">
-<section class="welcome">
-<p class="eyebrow" lang="en" dir="ltr">BATOOL’S CODING NOTEBOOK</p>
-<h1>كل مرة، خطوة جديدة.</h1>
-<p>أهلًا يا باتول. هنا دروسك وتمارينك، من أول فكرة لحد أول مشروع تكتبيه بنفسك.</p>
-<a class="text-link" href="#lessons">ابدئي بدروسك</a>
-</section>
-<div class="home-grid">
-<section class="missions" id="lessons">
-  <h2>مهامك الأسبوعية</h2>
-  <p class="sub">Choose a lesson and pick up where you left off.</p>
-  <a class="mcard" href="first_task.html">
-
-    <div><div class="mt">المهمة 1: الكمبيوتر والبرنامج</div><div class="me">Mission 1 · Computers &amp; Programs · 16 questions</div></div>
-
-  </a>
-  <div class="mcard done">
-
-    <div><div class="mt">المهمة 2: ورقة الأنشطة</div><div class="me">Mission 2 · sent to you as a doc</div></div>
-
-  </div>
-  <a class="mcard" href="second_task.html">
-
-    <div><div class="mt">المهمة 3: الصناديق والأنماط</div><div class="me">Mission 3 · Boxes &amp; Patterns · 15 challenges</div></div>
-
-  </a>
-
-  <a class="mcard" href="third_task.html">
-
-    <div><div class="mt">المهمة 4: بايثون!</div><div class="me">Mission 4 · Variables, print &amp; input</div></div>
-
-  </a>
-
-  <a class="mcard" href="fourth_task.html">
-
-    <div><div class="mt">المهمة 5: قوى العمليات</div><div class="me">Mission 5 · Operator Powers · 5 levels</div></div>
-
-  </a></section>
-<section class="curriculum" aria-labelledby="road-title"><h2 id="road-title">خطة التعلّم</h2><p class="sub" lang="en" dir="ltr">From the foundations to your own project.</p><div id="pathWrap"></div></section>
-</div>
-</main>
-<footer class="footer" lang="en" dir="ltr"><span>All rights reserved.</span><a href="https://abdullahsherdy.tech">@eng.abdullahsherdy</a></footer>
-<script>
-const nodes = [
-  {x:100,y:150,title:'التفكير كمبرمجة',en:'Thinking Like a Programmer',
-   desc:'نبدأ برحلة بسيطة نتعلم فيها إزاي نفكر زي المبرمجة، ونربط اللي اتعلمتيه في سكراتش بعالم البرمجة الحقيقي.',
-   milestone:'تقدري ترتّبي خطوات أي مهمة بترتيب واضح وصح.'},
-  {x:300,y:400,title:'أساسيات بايثون',en:'Python Fundamentals',
-   desc:'أول مرة تكتبي فيها كود حقيقي! هنتعلم المتغيرات والشروط والتكرار والدوال، ونبني مع بعض أول لعبة صغيرة.',
-   milestone:'أول برنامج كامل بتكتبيه بنفسك من الألف للياء.'},
-  {x:100,y:650,title:'البرمجة الكائنية',en:'Intro to OOP',
-   desc:'هنتعرف إزاي نبني حاجات زي "شخصية" أو "حيوان أليف" جوه الكود، ونفكر في المشروع بطريقة أكتر تنظيمًا.',
-   milestone:'مشروع بسيط ببني فيه Class خاص بيكي.'},
-  {x:300,y:900,title:'البيانات ومشاريع صغيرة',en:'Data & Mini Projects',
-   desc:'هنتعلم نحفظ ونرجع للبيانات، ونبني برنامج بيفتكر حاجات زي قايمة مهام أو مذكرات شخصية.',
-   milestone:'برنامج بيحتفظ بالبيانات حتى لو قفلتيه وفتحتيه تاني.'},
-  {x:100,y:1150,title:'عالم الويب',en:'Web Sprint',
-   desc:'استراحة ممتعة! هنتعلم HTML و CSS، ونبني صفحة ويب باسمك وبتصميمك إنتِ.',
-   milestone:'صفحة ويب شخصية من تصميمك إنتِ.'},
-  {x:300,y:1400,title:'المشروع الختامي',en:'Capstone Project',
-   desc:'مشروعك الخاص، بفكرتك إنتِ، من التخطيط للتنفيذ للعرض النهائي قدام العيلة.',
-   milestone:'مشروع كامل جاهز تعرضيه بفخر.'},
-  {x:100,y:1650,title:'تطوير الويب المتقدم',en:'Advanced Web Dev',locked:true},
-  {x:300,y:1900,title:'مشاريع حقيقية',en:'Real-World Projects',locked:true},
-  {x:100,y:2150,title:'…',en:'the path continues',locked:true},
-];
-const hello=document.getElementById("hello"); const enter=document.getElementById("enterSite"); document.querySelector("main").inert=true; document.querySelector(".site-header").inert=true; function dismissHello(){hello.classList.add("gone");document.querySelector("main").inert=false;document.querySelector(".site-header").inert=false;document.querySelector(".text-link").focus();} enter.onclick=dismissHello; enter.focus(); hello.onkeydown=e=>{if(e.key==="Escape")dismissHello();if(e.key==="Tab"){e.preventDefault();enter.focus();}};
-const wrap = document.getElementById('pathWrap');
-nodes.forEach((n,i)=>{
- const row = document.createElement(n.locked ? 'div' : 'details');
- row.className = 'curriculum-row';
- const heading = '<span class="lesson-number">'+String(i+1).padStart(2,'0')+'</span><span><span class="topic">'+n.title+'</span><span class="en" lang="en" dir="ltr">'+n.en+'</span></span>';
- row.innerHTML = n.locked ? '<div class="upcoming">'+heading+'<span class="status">قريبًا</span></div>' : '<summary>'+heading+'<span class="status">التفاصيل</span></summary><div class="lesson-detail"><p>'+n.desc+'</p><p class="outcome">'+n.milestone+'</p></div>';
- wrap.appendChild(row);
-});
-</script>
-</body>
-</html>
+<!doctype html><html lang="en" dir="ltr"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Batool’s Code Studio</title><link rel="stylesheet" href="studio-mockups/studio.css"><link rel="stylesheet" href="studio-live.css">
+<dialog id="welcome" aria-label="Welcome to Batool’s Code Studio"><div class="welcome-frame"><div class="welcome-signature"><svg class="hello-word" viewBox="0 0 448 210" role="img" aria-label="hello"><path pathLength="1" d="M 30 159 C 56 141 110 47 92 31 C 73 16 45 148 48 171 C 53 139 80 112 87 130 C 93 146 66 176 87 177 C 103 177 119 160 130 146 C 158 111 171 149 144 158 C 121 166 121 142 128 137 C 112 170 140 192 166 169 C 193 145 240 44 220 29 C 201 14 170 132 177 165 C 183 192 207 171 224 150 C 245 125 282 43 265 30 C 245 14 219 126 226 160 C 233 193 259 174 277 152 C 295 130 324 125 322 148 C 320 176 290 191 283 168 C 277 149 295 131 310 137 C 330 151 347 157 371 139 C 388 126 402 111 417 112"/></svg><div class="name">BATOOL</div></div><button autofocus id="enter">Enter my studio</button></div></dialog>
+<header><a class="brand" href="index.html">Batool’s <i>Code Studio</i></a><nav><a href="#missions">Missions</a><a href="#resources">Class links</a></nav></header>
+<main id="home"><section class="intro"><h1 id="headline" tabindex="-1">Welcome, Batool.</h1><div class="studio-progress"><span id="progress"></span><progress id="mission-meter" max="4" aria-label="Missions complete"></progress></div></section>
+<div class="workspace"><section class="feature"><div class="label" id="missionNumber"></div><h2 id="title"></h2><p id="description"></p><a class="action" id="start"></a><figure class="fieldnotes" aria-hidden="true"><figcaption id="diagramTitle"></figcaption><div id="diagram"></div></figure></section>
+<section class="editor"><div class="label">Python playground</div><h2>Make it say <i>hello.</i></h2><p>Change the name, then run your code.</p><form id="runner"><div class="filetab">hello.py</div><div class="code"><code>print(<b>"Hello, <input aria-label="Name in the greeting" id="person" value="Batool" maxlength="35">!"</b>)</code></div><div class="runbar"><button>Run</button></div></form><div class="output"><span class="label">Output</span><samp id="result" aria-live="polite">Hello, Batool!</samp></div></section></div>
+<section id="missions" tabindex="-1"><div class="sectionhead"><h2>Mission log</h2></div><ol id="list"></ol></section><section id="resources"></section><section class="roadmap" aria-labelledby="map-title"><p class="label">Learning roadmap</p><h2 id="map-title">Batool's quest map</h2><p>Choose a chapter to see what you'll build.</p><div id="stages"></div><p class="future">Coming later &middot; Advanced Web Development and Real-World Projects</p></section></main>
+<footer class="studio-footer">
+  <div><a class="brand" href="#home">Batool&rsquo;s <i>Code Studio</i></a><p>Programming lessons with <a href="https://abdullahsherdy.tech">Abdullah Sherdy</a></p></div>
+  <nav aria-label="Footer navigation"><a href="#missions">Mission log</a><a href="#map-title">Learning roadmap</a><a href="#resources">Class links</a></nav>
+  <p class="rights-notice">All rights reserved @ Abdullah Sherdy Academy</p>
+</footer><script type="module" src="studio-home.js"></script></html>
