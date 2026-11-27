@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Abdullah Sherdy Academy — Mission 7: Logic Powers</title>
+<style>
+  /* Layout copied from Mission 5 (fourth_task.html); colours come from the shared stylesheets. */
+  *{box-sizing:border-box;}
+  .stage{width:100%; max-width:560px;}
+  .top{margin:0 0 20px;}
+  .top h1{margin:0; font-size:clamp(26px,6vw,36px);}
+  .top p{margin:4px 0 0; font-weight:600; opacity:.75;}
+  .card{border-radius:24px; padding:22px 20px; display:none;}
+  .card.on{display:block;}
+  .tag{display:inline-block; font-weight:800; font-size:13px; border-radius:999px; padding:5px 12px;}
+  .bar{height:12px; border-radius:999px; overflow:hidden; margin:10px 0 14px;}
+  .bar i{display:block; height:100%; width:0; transition:width .3s;}
+  .q{font-size:20px; font-weight:800; line-height:1.4; margin:0 0 6px; white-space:pre-line;}
+  .hint{font-size:15px; padding:4px 0; text-decoration:underline;}
+  .hb,.why{display:none; margin-top:10px; border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.5;}
+  .show{display:block;}
+  .hm + .hm{margin-top:8px;}
+  pre.code{border-radius:14px; padding:12px 14px; margin:8px 0 12px; font-size:16px; line-height:1.6; overflow-x:auto; white-space:pre;}
+  .opt{display:block; width:100%; text-align:left; border:2px solid transparent; border-radius:14px; padding:13px 15px; margin-bottom:10px; font-weight:800; font-size:17px;}
+  .opt.mono,.chip,.multi label{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;}
+  .opt.no{opacity:.75;}
+  .tfrow{display:flex; gap:10px;}
+  .tfrow .opt{text-align:center;}
+  .next{text-align:right; margin-top:14px;}
+  .center{text-align:center;}
+  .chips{display:flex; flex-direction:column; gap:8px; margin:8px 0;}
+  .chip{border:2px solid #dedfd8; font-size:15px; padding:9px 12px; font-weight:700; text-align:left; white-space:pre-wrap; overflow-wrap:anywhere;}
+  .chip:disabled{opacity:.3;}
+  .small{font-size:14px; padding:7px 12px;}
+  .scorebar{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;}
+  .chipscore{border-radius:999px; padding:3px 12px; font-weight:800; font-size:17px;}
+  .worth{font-size:13px; font-weight:800; opacity:.6; margin:0 0 2px;}
+  input.tin{width:100%; font-size:17px; font-weight:700; padding:13px 14px; border:2px solid #dedfd8; border-radius:14px;}
+  input.tin:disabled{opacity:.8;}
+  .multi{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .multi label{flex:0 0 70px; font-weight:700;}
+  .multi input{flex:1; min-width:0;}
+  .big{font-size:28px; font-weight:700; margin:4px 0;}
+  .recap{text-align:left; margin:14px auto; padding-left:22px; max-width:400px; line-height:1.7;}
+  .nova{text-align:left;}
+  .ends{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px;}
+  .ends a{display:inline-flex; align-items:center; min-height:44px; padding:0 18px; font-weight:600;}
+</style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="playful.css">
+<link rel="stylesheet" href="mission-navigation.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to lesson</a>
+<nav class="mission-navigation" aria-label="Studio navigation"><a href="index.html#missions">Back to missions</a></nav>
+<main class="stage" id="main">
+  <header class="top">
+    <h1>Mission 7: Logic Powers</h1>
+    <p>Abdullah Sherdy Academy</p>
+  </header>
+
+  <div class="card on" id="quiz">
+    <div class="scorebar">
+      <span class="tag" id="lvl"></span>
+      <span class="chipscore" id="score"></span>
+    </div>
+    <div class="bar"><i id="fill"></i></div>
+    <p class="q" id="qt"></p>
+    <div class="worth" id="worth"></div>
+    <button class="hint" id="hintBtn">Hint 1</button>
+    <div class="hb" id="hb"></div>
+    <div id="area" style="margin-top:10px"></div>
+    <div class="why" id="why" role="status" aria-live="polite"></div>
+    <div class="next"><button id="next" disabled>Next</button></div>
+  </div>
+
+  <div class="card center" id="done">
+    <h2 style="margin:0">Logic Powers Unlocked!</h2>
+    <p style="margin:0">Abdullah Sherdy Academy</p>
+    <div class="big" id="sparks"></div>
+    <div><b id="rank"></b></div>
+    <div>Spark Badge: <b>Logic Powers</b></div>
+    <ul class="recap">
+      <li>elif: first True wins</li>
+      <li>Order: strictest first</li>
+      <li>and = both, or = one, not = flip</li>
+      <li>Each side of and / or is a full question</li>
+      <li>Nested: a question inside a question</li>
+      <li>n % 2 == 0 means even</li>
+    </ul>
+    <div class="why show good nova"><b>Nova says:</b> Great job! Any question you ask earns a Spark. Ask again, differently, next session!</div>
+    <div class="ends">
+      <button id="again">Play again</button>
+      <a href="index.html#missions">Back to missions</a>
+    </div>
+  </div>
+</main>
+<script>
+const LV = ["Ladder Climb","Order Matters","Truth Switches","Two Questions at Once","Boss Level"];
+const ladder = s => "score = "+s+"\nif score >= 90:\n    print(\"Lab Legend\")\nelif score >= 70:\n    print(\"Circuit Master\")\nelif score >= 50:\n    print(\"Code Cadet\")\nelse:\n    print(\"Rookie Inventor\")";
+const nested = x => "x = "+x+"\nif x > 5:\n    if x % 2 == 0:\n        print(\"big even\")\n    else:\n        print(\"big odd\")\nelse:\n    print(\"small\")";
+const AB = "a = True\nb = False\n\n";
+const NOTHING = "Something always prints here. Every path ends in a print.";
+
+// h = [hint 1 (nudge), hint 2 (almost the answer)]   m = message for each WRONG choice (same order as the options)
+const Q = [
+ // ===== Level 1: Ladder Climb =====
+ {l:0,t:"mc",q:"score = 75. What prints?",code:ladder(75),o:["Lab Legend","Circuit Master","Code Cadet","Rookie Inventor"],a:1,
+  h:["Go from the top. Stop at the first True.","Is 75 >= 90? No. Is 75 >= 70?"],
+  m:["75 is not 90 or more.",null,"75 >= 50 is true too, but Python stops at the FIRST true line.","else runs only if every question was False."],
+  w:"75 >= 90 is False. 75 >= 70 is True, so Python prints Circuit Master and stops."},
+ {l:0,t:"mc",q:"Now score = 50. What prints?",code:ladder(50),o:["Rookie Inventor","Lab Legend","Circuit Master","Code Cadet"],a:3,
+  h:["Look at the symbol: >=",">= means \"bigger OR equal\"."],
+  m:["50 >= 50 is True, so it is not the else.","50 is not 90 or more.","50 is smaller than 70.",null],
+  w:"50 >= 50 is True. >= means bigger OR equal."},
+ {l:0,t:"mc",q:"In an if / elif / else chain, how many branches can run?",o:["All of them","Only one","Two"],a:1,
+  h:["Python stops at the first True.","One door opens, then it leaves."],
+  m:["Only the first True branch runs.",null,"Even if more are True, only the first runs."],
+  w:"Python runs the first True branch, then leaves the chain."},
+
+ // ===== Level 2: Order Matters =====
+ {l:1,t:"mc",q:"What prints?",code:"score = 95\nif score >= 50:\n    print(\"Cadet\")\nelif score >= 90:\n    print(\"Legend\")",o:["Legend","Cadet","Both"],a:1,
+  h:["Which question comes first?","95 >= 50 is True. Python stops there."],
+  m:["The Legend line is never reached.",null,"Only one branch runs."],
+  w:"95 >= 50 is True first, so Python prints Cadet and never asks about 90."},
+ {l:1,t:"order",q:"Build the program. Tap the lines in the right order. Careful: one line is a trap!",
+  steps:["grade = int(input(\"Score? \"))","if grade >= 90:","    print(\"A\")","elif grade >= 50:","    print(\"Pass\")","else:","    print(\"Try again\")"],
+  bad:"else grade < 50:",show:[3,6,0,7,2,5,1,4],
+  bm:"else never has a condition. It means nobody said yes.",om:"Ask the strictest question first.",
+  h:["First line = Input.","else has no question."],
+  w:"Input first. Then the strictest question, the easier one, and else at the end."},
+ {l:1,t:"mc",q:"Where should the strictest question go in a ladder?",o:["At the bottom","It does not matter","At the top"],a:2,
+  h:["Think of the 95 example.","Strict first, easy last."],
+  m:["Then it never runs, an easy question catches everything first.","It matters! In the 95 example the wrong order gave the wrong answer.",null],
+  w:"Strictest first. If an easy question is on top, it catches everything."},
+
+ // ===== Level 3: Truth Switches =====
+ {l:2,t:"tf",q:"True or False?",code:AB+"a and b",o:["True","False"],a:1,
+  h:["and needs BOTH True.","b is False."],
+  m:["and is picky: both must be True.",null],
+  w:"and needs both True. b is False, so the answer is False."},
+ {l:2,t:"tf",q:"True or False?",code:AB+"a or b",o:["True","False"],a:0,
+  h:["or needs only ONE True.","a is True."],
+  m:[null,"or is relaxed: one True is enough."],
+  w:"or needs only one True. a is True."},
+ {l:2,t:"tf",q:"True or False?",code:AB+"(a or b) and not b",o:["True","False"],a:0,
+  h:["Do the brackets first.","(True) and (not False) = True and True."],
+  m:[null,"not b flips False to True."],
+  w:"(a or b) is True. not b is True. True and True is True."},
+
+ // ===== Level 4: Two Questions at Once =====
+ {l:3,t:"mc",q:"What prints?",code:"height = 110\nage = 12\nif height >= 120 and age >= 10:\n    print(\"Enjoy\")\nelse:\n    print(\"Sorry\")",o:["Enjoy","Sorry"],a:1,
+  h:["Check each side.","110 >= 120 is False. and needs both."],
+  m:["and needs BOTH True. The height side is False.",null],
+  w:"110 >= 120 is False. and needs both, so the else runs."},
+ {l:3,t:"mc",mono:true,q:"Which line is correct Python?",o:["if age == 5 or 6:","if age == 5 or age == 6:","if age == 5 or == 6:"],a:1,
+  h:["Each side of or is a full question.","Put age on both sides."],
+  m:["Python reads 6 as its own question, not as age == 6.",null,"== 6 alone is not a full question."],
+  w:"Each side of or must be a full question: age == 5 or age == 6."},
+ {l:3,t:"type",q:"The weekend starts if it is Friday OR Saturday. Type the missing word.",code:"if day == \"Fri\" ____ day == \"Sat\":",ans:["or"],ph:"Type the missing word",
+  h:["Do we need both days at once?","One day is enough."],
+  tm:{"and":"A day cannot be Fri and Sat at the same time.","not":"not flips one answer. Here we join two questions."},
+  w:"or: one True side is enough. Friday or Saturday."},
+
+ // ===== Level 5: Boss Level =====
+ {l:4,t:"mc",q:"x = 7. What prints?",code:nested(7),o:["big even","big odd","small","nothing"],a:1,
+  h:["First question: x > 5 ?","7 % 2 gives 1, not 0."],
+  m:["7 % 2 is 1, so it is not even.",null,"7 > 5 is True, so we go inside.",NOTHING],
+  w:"7 > 5 is True, so we go inside. 7 % 2 is 1, so it is odd."},
+ {l:4,t:"mc",q:"Now x = 4. What prints?",code:nested(4),o:["big even","big odd","small","nothing"],a:2,
+  h:["First question: x > 5 ?","4 > 5 is False, so the outer else runs."],
+  m:["4 is even, but the first question already failed.","4 > 5 is False, so Python never goes inside.",null,NOTHING],
+  w:"4 > 5 is False. Python skips the inside question and runs the outer else."},
+ {l:4,t:"multi",boss:true,q:"BOSS! Double Sparks. Type what prints for each n.",code:"if n % 15 == 0:\n    print(\"Both\")\nelif n % 3 == 0:\n    print(\"Fizz\")\nelif n % 5 == 0:\n    print(\"Buzz\")\nelse:\n    print(n)",
+  parts:[
+   {lab:"n = 15",ans:"both",tm:{fizz:"For n = 15: 15 % 15 == 0 is checked first.",buzz:"For n = 15: 15 % 15 == 0 is checked first."}},
+   {lab:"n = 9",ans:"fizz",tm:{both:"For n = 9: 9 % 15 is not 0. Try the next question.",buzz:"For n = 9: 9 % 5 is 4, not 0. Try 9 % 3."}},
+   {lab:"n = 10",ans:"buzz",tm:{"10":"For n = 10: 10 % 5 is 0, so Buzz.",fizz:"For n = 10: 10 % 3 is 1, not 0. Try 10 % 5."}}],
+  h:["Why is 15 checked first?","15 divides by 3 and by 5, but the first True wins."],
+  w:"15 gives Both (checked first), 9 gives Fizz, 10 gives Buzz. First True wins!"}
+];
+
+const $=id=>document.getElementById(id);
+function mk(tag,cls,txt){const e=document.createElement(tag); if(cls)e.className=cls; if(txt!==undefined)e.textContent=txt; return e;}
+function go(id){["quiz","done"].forEach(x=>$(x).classList.toggle("on",x===id));}
+// trim, lowercase, ignore quotes and spaces
+function norm(s){return s.toLowerCase().replace(/["'“”‘’\s]/g,"");}
+
+let i=0,total=0,wrong=0,hints=0,done=false;
+
+// 3 / 2 / 1 Sparks. Boss: 6, minus 1 per hint or wrong try, never under 2.
+function worth(){const it=Q[i], used=wrong+hints; return it.boss?Math.max(2,6-used):Math.max(1,3-used);}
+function refreshWorth(){$("worth").textContent="Worth up to "+worth()+" Sparks";}
+
+function show(){
+  const it=Q[i]; wrong=0; hints=0; done=false;
+  $("lvl").textContent="Level "+(it.l+1)+" of "+LV.length+" · "+LV[it.l]+" · Question "+(i+1)+" of "+Q.length;
+  $("fill").style.width=(i/Q.length*100)+"%";
+  $("score").textContent="Sparks: "+total;
+  $("qt").textContent=it.q;
+  $("hb").innerHTML=""; $("hb").classList.remove("show");
+  $("hintBtn").style.display="inline"; $("hintBtn").textContent="Hint 1";
+  $("why").className="why"; $("why").textContent="";
+  $("next").disabled=true; $("next").textContent=i===Q.length-1?"Finish":"Next";
+  refreshWorth();
+  const a=$("area"); a.innerHTML="";
+  if(it.code)a.appendChild(mk("pre","code",it.code));
+  R[it.t](it,a);
+  scrollTo(0,0);
+}
+
+$("hintBtn").onclick=()=>{
+  if(done||hints>=2)return;
+  $("hb").appendChild(mk("div","hm","Hint "+(hints+1)+": "+Q[i].h[hints]));
+  $("hb").classList.add("show"); hints++;
+  refreshWorth();
+  if(hints>=2)$("hintBtn").style.display="none"; else $("hintBtn").textContent="Hint 2";
+};
+$("next").onclick=()=>{i++; i<Q.length?show():finish();};
+$("again").onclick=()=>{i=0; total=0; go("quiz"); show();};
+
+function win(){
+  done=true; const gain=worth(); total+=gain;
+  $("score").textContent="Sparks: "+total;
+  $("why").className="why show good";
+  $("why").textContent="Correct! "+Q[i].w+"  +"+gain+" Sparks";
+  $("next").disabled=false; $("hintBtn").style.display="none"; $("worth").textContent="";
+}
+// A wrong try never locks the question. She can always try again.
+function miss(msg){
+  wrong++; refreshWorth();
+  $("why").className="why show try";
+  $("why").textContent=msg?msg+" Try again!":"Not yet, try again or use a hint.";
+}
+
+function finish(){
+  $("fill").style.width="100%";
+  $("sparks").textContent=total+" / 48 Sparks";
+  $("rank").textContent="Rank: "+(total>=42?"Lab Legend":total>=30?"Circuit Master":total>=15?"Code Cadet":"Rookie Inventor");
+  go("done"); scrollTo(0,0);
+}
+
+function typed(ph,label){
+  const inp=mk("input","tin"); inp.type="text"; inp.placeholder=ph; inp.autocomplete="off"; inp.autocapitalize="off"; inp.spellcheck=false;
+  inp.setAttribute("autocorrect","off"); inp.setAttribute("aria-label",label);
+  inp.oninput=()=>inp.classList.remove("no");
+  return inp;
+}
+
+const R={
+  mc(it,a){
+    const w=mk("div",it.t==="tf"?"tfrow":"");
+    it.o.forEach((t,n)=>{const b=mk("button","opt"+(it.mono?" mono":""),t);
+      b.onclick=()=>{if(done)return;
+        if(n===it.a){b.classList.add("ok"); win();}
+        else{b.classList.add("no"); b.disabled=true; miss(it.m[n]);}
+      };
+      w.appendChild(b);});
+    a.appendChild(w);
+  },
+  order(it,a){
+    const got=[], n=it.steps.length, empty="# Your program:";
+    const seq=mk("pre","code",empty), chips=mk("div","chips");
+    const rs=mk("button","secondary small","Start again");
+    const reset=()=>{got.length=0; seq.classList.remove("no"); seq.textContent=empty; [...chips.children].forEach(c=>{if(!c.classList.contains("no"))c.disabled=false;});};
+    it.show.forEach(g=>{const c=mk("button","chip",g===n?it.bad:it.steps[g]);
+      c.onclick=()=>{if(done)return;
+        if(g===n){c.classList.add("no"); c.disabled=true; miss(it.bm); return;}
+        got.push(g); c.disabled=true; seq.classList.remove("no"); seq.textContent=got.map(x=>it.steps[x]).join("\n");
+        if(got.length<n)return;
+        if(got.every((v,k)=>v===k)){seq.classList.add("ok"); win();}
+        else{seq.classList.add("no"); miss(it.om); const q=i; setTimeout(()=>{if(!done&&q===i&&got.length===n)reset();},1800);}
+      };
+      chips.appendChild(c);});
+    rs.onclick=()=>{if(!done)reset();};
+    a.append(chips,seq,rs);
+  },
+  type(it,a){
+    const inp=typed(it.ph,"Your answer"), chk=mk("button","","Check"); chk.style.marginTop="10px";
+    const run=()=>{if(done)return; const v=norm(inp.value); if(!v){inp.focus(); return;}
+      if(it.ans.includes(v)){inp.classList.add("ok"); inp.disabled=true; chk.disabled=true; win();}
+      else{inp.classList.add("no"); miss(it.tm[v]);}
+    };
+    chk.onclick=run; inp.onkeydown=e=>{if(e.key==="Enter")run();};
+    a.append(inp,chk);
+  },
+  multi(it,a){
+    const chk=mk("button","","Check");
+    const run=()=>{if(done)return;
+      const blank=boxes.find(b=>!norm(b.value)); if(blank){blank.focus(); return;}
+      let msg, all=true;
+      boxes.forEach((b,k)=>{const p=it.parts[k], v=norm(b.value), ok=v===p.ans;
+        b.classList.toggle("ok",ok); b.classList.toggle("no",!ok);
+        if(!ok){all=false; msg=msg||p.tm[v];}});
+      if(all){boxes.forEach(b=>b.disabled=true); chk.disabled=true; win();}
+      else miss(msg||"The red boxes are not right yet.");
+    };
+    const boxes=it.parts.map((p,k)=>{
+      const row=mk("div","multi"), lab=mk("label","",p.lab), inp=typed("What prints?",p.lab);
+      inp.id="box"+k; lab.htmlFor=inp.id; inp.onkeydown=e=>{if(e.key==="Enter")run();};
+      row.append(lab,inp); a.appendChild(row); return inp;});
+    chk.onclick=run; a.appendChild(chk);
+  }
+};
+R.tf=R.mc;
+show();
+</script>
+</body>
+</html>

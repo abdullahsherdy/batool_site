@@ -5,7 +5,8 @@ const lessons = [
   ['Boxes & Patterns','Look at the sequence and predict what comes next.','Pattern Finder','second_task.html'],
   ['Variables, print & input','Store a value, ask a question, and print the answer.','Variable Builder','third_task.html'],
   ['Operator Powers','Choose operators to calculate and compare values.','Operator Explorer','fourth_task.html'],
-  ['Decisions (if and else)','A cat, two choices, and a new Python mission coming soon.','Decision Maker','decisions.html','Coming soon']
+  ['Decisions (if and else)','A cat, two choices, and a new Python mission coming soon.','Decision Maker','decisions.html','Coming soon'],
+  ['Logic Powers','elif, and / or / not, and nested decisions. 5 levels, about 15 minutes.','Logic Powers','sixth_task.html']
 ];
 // Instructor-confirmed completions belong to specific missions, independent of quiz scores.
 const finishedLessons = new Set(['first_task.html','second_task.html','third_task.html','fourth_task.html']);
